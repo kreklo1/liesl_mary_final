@@ -1,3 +1,5 @@
+
+
 ```{r}
 library(readr)
 airbnb_data <- read_csv("airbnb_data.csv")
