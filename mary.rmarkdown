@@ -1,8 +1,0 @@
-```{r}
-library(readr)
-airbnb_data <- read_csv("airbnb_data.csv")
-View(airbnb_data)
-
-Rat_Sightings_20240507 <- read_csv("Rat_Sightings_20240507.csv")
-View(Rat_Sightings_20240507)
-```
