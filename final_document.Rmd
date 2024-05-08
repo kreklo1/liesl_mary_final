@@ -1,7 +1,126 @@
+---
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r}
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+library(lubridate)
+library(stringr)
+library(emojifont)
+library(ggtext)
+library(leaflet)
+library(sf)
+library(tidyverse)
+library(readr)
+library(jsonlite)
+library(wordcloud)
+library(tidytext)
+```
+
+```{r, include=FALSE}
+airbnb_data <- read_csv("airbnb_data.csv")
+
+rats <- read_csv("Rat_Sightings_20240507.csv")|>
+  filter(Latitude!="NA",
+         Longitude!="NA")
+
+parks <- read_csv("Parks_Properties_20240507.csv")
+parks_sf <- st_as_sf(parks, wkt = "multipolygon")
+
+
+url<- "https://data.cityofnewyork.us/resource/fi97-k4k6.json"
+
+farmers_markets <- fromJSON(url)|>
+  mutate(latitude=as.numeric(latitude),
+         longitude=as.numeric(longitude))
+```
+
+```{r, include=FALSE}
+rats_location <- rats |>
+  select(Latitude, Longitude) 
+
+rats_graph<-rats_location|>
+  sample_n(225)  
+
+```
+
+```{r, include=FALSE}
+airbnb_location<-airbnb_data|>
+  select(Latitude, Longitude)
+```
+
+##Two variable comparisons data
+```{r}
+airbnb_parsed <- airbnb_data |>
+  select(Name, Title, Id, `Listing URL`, Price, Beds, Baths, Bedrooms, `Average Rating`, `Number of Reviews`, `More Details`, `Listing Type`, `Room Type Category`) |>
+  mutate(price_parsed = parse_number(Price))
+```
 
 
 ```{r}
-library(readr)
-airbnb_data <- read_csv("airbnb_data.csv")
-View(airbnb_data)
+house_icon <- makeIcon(
+  iconUrl = "https://www.iconeasy.com/icon/png/System/Vista%20General/house.png",
+  iconWidth = 29,
+  iconHeight = 29
+)
+
+rat_icon <- makeIcon(
+  iconUrl = "https://icons.iconarchive.com/icons/google/noto-emoji-animals-nature/256/22251-rat-icon.png",
+  iconWidth = 28,
+  iconHeight = 28
+)
+
+leaflet() |>
+  addTiles() |>
+  setView(lng = -74.00, lat = 40.71, zoom = 12) |>
+  addMarkers(data = airbnb_data, lng = ~Longitude, lat = ~Latitude, icon = house_icon,
+     popup = ~paste("<a href='", `Listing URL`, "'><b>", Title, "</b></a>", "</br>", Name, "</br>", Price, Qualifier))|>
+  addMarkers(data=rats_graph, lng=~Longitude, lat=~Latitude, icon = rat_icon, popup = ~paste("squeak squeak:)"))
+
 ```
+
+```{r}
+carrot_icon <- makeIcon(
+  iconUrl = "https://images.emojiterra.com/google/noto-emoji/unicode-15.1/color/svg/1f955.svg",
+  iconWidth = 29,
+  iconHeight = 29
+)
+
+leaflet() |>
+  addTiles() |>
+  setView(lng = -74.00, lat = 40.71, zoom = 12)|>
+  addMarkers(data=farmers_markets, lng=~longitude, lat=~latitude, icon = carrot_icon, popup = ~paste(marketname, "</br>", daysoperation, hoursoperations))
+```
+
+```{r}
+leaflet() |>
+  addTiles() |>
+  setView(lng = -74.00, lat = 40.71, zoom = 12)|>
+  addPolygons(data=parks_sf, color="deeppink", popup = ~paste(SIGNNAME))
+```
+
+
+```{r}
+word <- airbnb_data |>
+  select(Name) |>
+  mutate(Name = str_to_lower(Name),
+         word = str_split(Name, "\\s+"))|>
+         unnest(word) |>
+  mutate(word = str_remove_all(word, "[^[:alpha:]]")) |>
+  anti_join(stop_words) |>
+  count(word, sort=TRUE)|>
+  slice(2:378)
+
+pinkalicious <- c("#FF6FFF", "#FF5D99", "hotpink", "#FFCFF7", "deeppink")
+
+
+wordcloud(words = word$word, freq = word$n, min.freq = 1,
+          max.words = 100, random.order = FALSE, rot.per = 0.35, 
+          colors = pinkalicious)
+
+```
+
