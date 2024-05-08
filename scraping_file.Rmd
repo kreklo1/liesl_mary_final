@@ -5,6 +5,7 @@ editor_options:
 ---
 
 ```{r, include=FALSE}
+library(tidyverse)
 library(ggplot2)
 library(dplyr)
 library(tidyr)
@@ -50,4 +51,11 @@ rats_graph<-rats_location|>
 ```{r, include=FALSE}
 airbnb_location<-airbnb_data|>
   select(Latitude, Longitude)
+```
+
+##Two variable comparisons data
+```{r}
+airbnb_parsed <- airbnb_data |>
+  select(Name, Title, Id, `Listing URL`, Price, Beds, Baths, Bedrooms, `Average Rating`, `Number of Reviews`, `More Details`, `Listing Type`, `Room Type Category`) |>
+  mutate(price_parsed = parse_number(Price))
 ```
