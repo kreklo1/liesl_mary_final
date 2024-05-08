@@ -4,7 +4,6 @@ editor_options:
   chunk_output_type: console
 ---
 
-
 ```{r}
 library(ggplot2)
 library(dplyr)
@@ -16,6 +15,7 @@ library(ggtext)
 library(leaflet)
 library(sf)
 library(readr)
+library(jsonlite)
 ```
 
 ```{r}
@@ -26,6 +26,16 @@ rats <- read_csv("Rat_Sightings_20240507.csv")|>
          Longitude!="NA")
 
 parks <- read_csv("Parks_Properties_20240507.csv")
+parks_sf <- st_as_sf(parks, wkt = "multipolygon")
+
+
+
+url<- "https://data.cityofnewyork.us/resource/fi97-k4k6.json"
+
+farmers_markets <- fromJSON(url)|>
+  mutate(latitude=as.numeric(latitude),
+         longitude=as.numeric(longitude))
+
 ```
 
 ```{r}
@@ -44,27 +54,11 @@ airbnb_location<-airbnb_data|>
   select(Latitude, Longitude)
 ```
 
-
-```{r}
-nyc_county_borders <- map_data("county", region = c("new york", "kings", "bronx", "queens", "richmond"))
-
-nyc_county_plot <- ggplot() +
-  geom_polygon(data = nyc_county_borders, aes(x = long, y = lat, group = group), fill = "white", color = "black") +
-  coord_map(xlim = c(-74.3, -73.7), ylim = c(40.503, 40.95)) +
-  theme_linedraw()
-
-nyc_county_plot +
-geom_point(data = rats_location, aes(x=Longitude, y=Latitude), alpha=0.2, color="hotpink")+
-geom_point(data=airbnb_location, aes(x=Longitude, y=Latitude), color="black")
-
-```
-
-
 ```{r}
 house_icon <- makeIcon(
   iconUrl = "https://www.iconeasy.com/icon/png/System/Vista%20General/house.png",
-  iconWidth = 30,
-  iconHeight = 30
+  iconWidth = 29,
+  iconHeight = 29
 )
 
 rat_icon <- makeIcon(
@@ -76,7 +70,28 @@ rat_icon <- makeIcon(
 leaflet() |>
   addTiles() |>
   setView(lng = -74.00, lat = 40.71, zoom = 12) |>
-  addMarkers(data = airbnb_location, lng = ~Longitude, lat = ~Latitude, icon = house_icon)|>
-  addMarkers(data=rats_graph, lng=~Longitude, lat=~Latitude, icon = rat_icon)
+  addMarkers(data = airbnb_data, lng = ~Longitude, lat = ~Latitude, icon = house_icon,
+     popup = ~paste("<a href='", `Listing URL`, "'><b>", Title, "</b></a>", "</br>", Name, "</br>", Price, Qualifier))|>
+  addMarkers(data=rats_graph, lng=~Longitude, lat=~Latitude, icon = rat_icon, popup = ~paste("squeak squeak:)"))
 
+```
+
+```{r}
+carrot_icon <- makeIcon(
+  iconUrl = "https://images.emojiterra.com/google/noto-emoji/unicode-15.1/color/svg/1f955.svg",
+  iconWidth = 29,
+  iconHeight = 29
+)
+
+leaflet() |>
+  addTiles() |>
+  setView(lng = -74.00, lat = 40.71, zoom = 12)|>
+  addMarkers(data=farmers_markets, lng=~longitude, lat=~latitude, icon = carrot_icon, popup = ~paste(marketname, "</br>", daysoperation, hoursoperations))
+```
+
+```{r}
+leaflet() |>
+  addTiles() |>
+  setView(lng = -74.00, lat = 40.71, zoom = 12)|>
+  addPolygons(data=parks_sf, color="deeppink", popup = ~paste(SIGNNAME))
 ```
