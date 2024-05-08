@@ -15,8 +15,6 @@ library(emojifont)
 library(ggtext)
 library(leaflet)
 
-emoji(search_emoji('tree'))
-
 ```
 
 ```{r}
@@ -52,8 +50,8 @@ nyc_county_plot <- ggplot() +
   theme_linedraw()
 
 nyc_county_plot +
-geom_point(data = rats_location, aes(x=Longitude, y=Latitude), alpha=0.5, color="hotpink")+
-geom_text(data=airbnb_location, aes(x=Longitude, y=Latitude, label="🏠"))
+geom_point(data = rats_location, aes(x=Longitude, y=Latitude), alpha=0.2, color="hotpink")+
+geom_point(data=airbnb_location, aes(x=Longitude, y=Latitude), color="black")
 
 ```
 
@@ -62,4 +60,18 @@ leaflet() |>
   addTiles() |>
   setView(-74.00, 40.71, zoom = 13) |>
   addMarkers(data = rats_location, lng = ~Longitude, lat = ~Latitude)
+```
+
+```{r}
+leaflet() %>%
+  addTiles() %>%
+  setView(lng = -74.00, lat = 40.71, zoom = 13) %>%
+  addMarkers(data = rats_location, lng = ~Longitude, lat = ~Latitude,
+             icon = leaflet::iconList(
+               house = makeIcon(
+                 iconUrl = "https://emojicdn.elk.sh/house",
+                 iconWidth = 30, iconHeight = 30
+               )
+             ),
+             label = as.character(rats_location$Longitude))
 ```
