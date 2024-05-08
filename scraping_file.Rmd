@@ -1,0 +1,53 @@
+---
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r, include=FALSE}
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+library(lubridate)
+library(stringr)
+library(emojifont)
+library(ggtext)
+library(leaflet)
+library(sf)
+library(readr)
+library(jsonlite)
+library(wordcloud)
+library(tidytext)
+```
+
+```{r, include=FALSE}
+airbnb_data <- read_csv("airbnb_data.csv")
+
+rats <- read_csv("Rat_Sightings_20240507.csv")|>
+  filter(Latitude!="NA",
+         Longitude!="NA")
+
+parks <- read_csv("Parks_Properties_20240507.csv")
+parks_sf <- st_as_sf(parks, wkt = "multipolygon")
+
+
+url<- "https://data.cityofnewyork.us/resource/fi97-k4k6.json"
+
+farmers_markets <- fromJSON(url)|>
+  mutate(latitude=as.numeric(latitude),
+         longitude=as.numeric(longitude))
+```
+
+```{r, include=FALSE}
+rats_location <- rats |>
+  select(Latitude, Longitude) 
+
+rats_graph<-rats_location|>
+  sample_n(225)  
+
+```
+
+```{r, include=FALSE}
+airbnb_location<-airbnb_data|>
+  select(Latitude, Longitude)
+```
