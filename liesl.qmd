@@ -1,0 +1,60 @@
+---
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+## Libraries
+```{r}
+library(tidyverse)
+library(ggplot2)
+library(leaflet)
+library(readr)
+```
+
+## Data
+```{r}
+parks <- read_csv("datasets/Parks_Properties_20240507.csv")
+airbnb <- read_csv("datasets/airbnb_data.csv")
+rats <- read_csv("datasets/Rat_Sightings_20240507.csv")
+```
+
+
+## Interactive Leaflet map
+```{r}
+leaflet() |>
+    addTiles() |>
+    setView(lng = mean(airbnb$Longitude), lat = mean(airbnb$Latitude), 
+            zoom = 10) |> 
+    addCircleMarkers(data = airbnb,
+        lat = ~ Latitude, 
+        lng = ~ Longitude, 
+        popup = ~ Name, 
+        radius = ~ 10,  
+        weight = 3,
+        color = "hotpink", 
+        fillColor = "pink")
+```
+Concerns about this. 
+  - Is there a way to display multiple things of information in the popup?
+  
+##Two variable comparisons
+```{r}
+airbnb_parsed <- airbnb |>
+  mutate(parse_number(Price))
+```
+
+
+```{r}
+airbnb_parsed |>
+  ggplot(aes(y = Price, x = `Average Rating`)) +
+  geom_point()
+```
+Interchangeable variables to implement with the shiny app
+  - Price
+  - Location
+  - Busyness
+  - Review
+    - # 
+    - ⭐
+  - Tags (e.g. guest favorite)
