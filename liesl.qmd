@@ -10,6 +10,8 @@ library(tidyverse)
 library(ggplot2)
 library(leaflet)
 library(readr)
+library(wordcloud)
+library(stringr)
 ```
 
 ## Data
@@ -41,20 +43,53 @@ Concerns about this.
 ##Two variable comparisons
 ```{r}
 airbnb_parsed <- airbnb_data |>
-  mutate(parse_number(Price))
+  select(Name, Title, Id, `Listing URL`, Price, Beds, Baths, Bedrooms, `Average Rating`, `Number of Reviews`, `More Details`, `Listing Type`, `Room Type Category`) |>
+  mutate(price_parsed = parse_number(Price))
 ```
 
 
 ```{r}
 airbnb_parsed |>
-  ggplot(aes(y = Price, x = `Average Rating`)) +
-  geom_point()
+  ggplot(aes(y = price_parsed, x = `Average Rating`)) +
+  geom_point() 
 ```
+```{r}
+airbnb_parsed |>
+  ggplot(aes(y = `Number of Reviews`, x = `Average Rating`)) +
+  geom_point() 
+```
+```{r}
+airbnb_parsed |>
+  ggplot(aes(y = `Number of Reviews`, x = price_parsed)) +
+  geom_point() 
+```
+```{r}
+airbnb_parsed |>
+  ggplot(aes(y = `More Details`)) +
+  geom_bar() 
+```
+
 Interchangeable variables to implement with the shiny app
   - Price
-  - Location
-  - Busyness
-  - Review
+  - Location (how)
+  - Busyness (i don't think we can do this because that information is empty)
+  - Review (done⭐) (done #)
     - # 
     - ⭐
-  - Tags (e.g. guest favorite)
+  - Tags (e.g. guest favorite) (not a scatter plot variable)
+  
+## Word Cloud
+```{r}
+word <- airbnb_data |>
+  select(Name) |>
+  mutate(words = str_split(Name, "\\s+"))
+```
+
+```{r}
+word_freq <- table(words)
+word_freq
+```
+
+
+
+
