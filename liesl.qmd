@@ -73,10 +73,9 @@ airbnb_parsed |>
 Interchangeable variables to implement with the shiny app
   - Price
   - Location (how)
-  - Busyness (i don't think we can do this because that information is empty)
   - Review (done⭐) (done #)
     - # 
-    - ⭐
+    - ⭐ 
   - Tags (e.g. guest favorite) (not a scatter plot variable)
   
 ## Word Cloud
