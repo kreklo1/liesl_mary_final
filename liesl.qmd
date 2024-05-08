@@ -84,9 +84,9 @@ word <- airbnb_data |>
   select(Name) |>
   mutate(Name = str_to_lower(Name),
          words = str_split(Name, "\\s+"),
-         words = str_remove_all(words, ""))
+         words = str_remove_all(words, "")) #this line doesn't work, i'm trying to remove things like colons, slashes, comas, and ampersands
 ```
-
+concerns: bdrm, bed room, bedroom BR are all meaning bedroom but they don't all say it the same way  
 
 ```{r}
 trytrytry <- str_split(airbnb_data$Name, "\\s+")[[1]]
