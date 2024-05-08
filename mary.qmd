@@ -16,6 +16,8 @@ library(leaflet)
 library(sf)
 library(readr)
 library(jsonlite)
+library(wordcloud)
+library(tidytext)
 ```
 
 ```{r}
@@ -29,12 +31,17 @@ parks <- read_csv("Parks_Properties_20240507.csv")
 parks_sf <- st_as_sf(parks, wkt = "multipolygon")
 
 
-
 url<- "https://data.cityofnewyork.us/resource/fi97-k4k6.json"
 
 farmers_markets <- fromJSON(url)|>
   mutate(latitude=as.numeric(latitude),
          longitude=as.numeric(longitude))
+
+boroughs<- "https://services5.arcgis.com/GfwWNkhOj9bNBqoJ/arcgis/rest/services/NYC_Borough_Boundary/FeatureServer/0/query?outFields=*&where=1%3D1&f=geojson"
+boroughs<-fromJSON(boroughs)
+
+
+
 
 ```
 
@@ -97,4 +104,23 @@ leaflet() |>
 ```
 
 
+```{r}
+word <- airbnb_data |>
+  select(Name) |>
+  mutate(Name = str_to_lower(Name),
+         word = str_split(Name, "\\s+"))|>
+         unnest(word) |>
+  mutate(word = str_remove_all(word, "[^[:alpha:]]")) |>
+  anti_join(stop_words) |>
+  count(word, sort=TRUE)|>
+  slice(2:378)
+
+pinkalicious <- c("#FF6FFF", "#FF5D99", "hotpink", "#FFCFF7", "deeppink")
+
+
+wordcloud(words = word$word, freq = word$n, min.freq = 1,
+          max.words = 100, random.order = FALSE, rot.per = 0.35, 
+          colors = pinkalicious)
+
+```
 
