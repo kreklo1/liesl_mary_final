@@ -95,3 +95,6 @@ leaflet() |>
   setView(lng = -74.00, lat = 40.71, zoom = 12)|>
   addPolygons(data=parks_sf, color="deeppink", popup = ~paste(SIGNNAME))
 ```
+
+
+
