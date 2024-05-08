@@ -12,6 +12,7 @@ library(leaflet)
 library(readr)
 library(wordcloud)
 library(stringr)
+library(tidytext)
 ```
 
 ## Data
@@ -83,11 +84,16 @@ Interchangeable variables to implement with the shiny app
 word <- airbnb_data |>
   select(Name) |>
   mutate(Name = str_to_lower(Name),
-         words = str_split(Name, "\\s+"),
-         words = str_remove_all(words, "")) #this line doesn't work, i'm trying to remove things like colons, slashes, comas, and ampersands
+         word = str_split(Name, "\\s+"),
+         word = gsub("([[:punct:]])(?=[^[:alnum:]]*$)", "", word, perl = TRUE)) |>
+  unnest(word) |>
+  anti_join(stop_words) |>
+  count(word)
+
 ```
 concerns: bdrm, bed room, bedroom BR are all meaning bedroom but they don't all say it the same way  
-
+,
+         words = str_remove_all(words, "")
 ```{r}
 trytrytry <- str_split(airbnb_data$Name, "\\s+")[[1]]
 trytrytry
