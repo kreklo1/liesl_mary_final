@@ -82,7 +82,16 @@ Interchangeable variables to implement with the shiny app
 ```{r}
 word <- airbnb_data |>
   select(Name) |>
-  mutate(words = str_split(Name, "\\s+"))
+  mutate(Name = str_to_lower(Name),
+         words = str_split(Name, "\\s+"),
+         words = str_remove_all(words, ""))
+```
+
+
+```{r}
+trytrytry <- str_split(airbnb_data$Name, "\\s+")[[1]]
+trytrytry
+#trying to figure it out
 ```
 
 ```{r}
