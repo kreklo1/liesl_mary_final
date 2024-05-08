@@ -14,11 +14,11 @@ library(stringr)
 library(emojifont)
 library(ggtext)
 library(leaflet)
-
+library(sf)
+library(readr)
 ```
 
 ```{r}
-library(readr)
 airbnb_data <- read_csv("airbnb_data.csv")
 
 rats <- read_csv("Rat_Sightings_20240507.csv")|>
@@ -33,6 +33,10 @@ rats_location <- rats |>
   select(Latitude, Longitude) 
 
 rats_location
+
+rats_graph<-rats_location|>
+  sample_n(225)  
+
 ```
 
 ```{r}
@@ -55,23 +59,24 @@ geom_point(data=airbnb_location, aes(x=Longitude, y=Latitude), color="black")
 
 ```
 
-```{r}
-leaflet() |>
-  addTiles() |>
-  setView(-74.00, 40.71, zoom = 13) |>
-  addMarkers(data = rats_location, lng = ~Longitude, lat = ~Latitude)
-```
 
 ```{r}
-leaflet() %>%
-  addTiles() %>%
-  setView(lng = -74.00, lat = 40.71, zoom = 13) %>%
-  addMarkers(data = rats_location, lng = ~Longitude, lat = ~Latitude,
-             icon = leaflet::iconList(
-               house = makeIcon(
-                 iconUrl = "https://emojicdn.elk.sh/house",
-                 iconWidth = 30, iconHeight = 30
-               )
-             ),
-             label = as.character(rats_location$Longitude))
+house_icon <- makeIcon(
+  iconUrl = "https://www.iconeasy.com/icon/png/System/Vista%20General/house.png",
+  iconWidth = 30,
+  iconHeight = 30
+)
+
+rat_icon <- makeIcon(
+  iconUrl = "https://icons.iconarchive.com/icons/google/noto-emoji-animals-nature/256/22251-rat-icon.png",
+  iconWidth = 28,
+  iconHeight = 28
+)
+
+leaflet() |>
+  addTiles() |>
+  setView(lng = -74.00, lat = 40.71, zoom = 12) |>
+  addMarkers(data = airbnb_location, lng = ~Longitude, lat = ~Latitude, icon = house_icon)|>
+  addMarkers(data=rats_graph, lng=~Longitude, lat=~Latitude, icon = rat_icon)
+
 ```
