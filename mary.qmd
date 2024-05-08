@@ -1,13 +1,65 @@
+---
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
 
+
+```{r}
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+library(lubridate)
+library(stringr)
+library(emojifont)
+library(ggtext)
+library(leaflet)
+
+emoji(search_emoji('tree'))
+
+```
 
 ```{r}
 library(readr)
 airbnb_data <- read_csv("airbnb_data.csv")
-View(airbnb_data)
 
-rats <- read_csv("Rat_Sightings_20240507.csv")
-View(rats)
+rats <- read_csv("Rat_Sightings_20240507.csv")|>
+  filter(Latitude!="NA",
+         Longitude!="NA")
 
 parks <- read_csv("Parks_Properties_20240507.csv")
-View(parks)
+```
+
+```{r}
+rats_location <- rats |>
+  select(Latitude, Longitude) 
+
+rats_location
+```
+
+```{r}
+airbnb_location<-airbnb_data|>
+  select(Latitude, Longitude)
+```
+
+
+```{r}
+nyc_county_borders <- map_data("county", region = c("new york", "kings", "bronx", "queens", "richmond"))
+
+nyc_county_plot <- ggplot() +
+  geom_polygon(data = nyc_county_borders, aes(x = long, y = lat, group = group), fill = "white", color = "black") +
+  coord_map(xlim = c(-74.3, -73.7), ylim = c(40.503, 40.95)) +
+  theme_linedraw()
+
+nyc_county_plot +
+geom_point(data = rats_location, aes(x=Longitude, y=Latitude), alpha=0.5, color="hotpink")+
+geom_text(data=airbnb_location, aes(x=Longitude, y=Latitude, label="🏠"))
+
+```
+
+```{r}
+leaflet() |>
+  addTiles() |>
+  setView(-74.00, 40.71, zoom = 13) |>
+  addMarkers(data = rats_location, lng = ~Longitude, lat = ~Latitude)
 ```
