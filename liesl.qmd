@@ -15,7 +15,7 @@ library(readr)
 ## Data
 ```{r}
 parks <- read_csv("datasets/Parks_Properties_20240507.csv")
-airbnb <- read_csv("datasets/airbnb_data.csv")
+airbnb_data <- read_csv("datasets/airbnb_data.csv")
 rats <- read_csv("datasets/Rat_Sightings_20240507.csv")
 ```
 
@@ -24,9 +24,9 @@ rats <- read_csv("datasets/Rat_Sightings_20240507.csv")
 ```{r}
 leaflet() |>
     addTiles() |>
-    setView(lng = mean(airbnb$Longitude), lat = mean(airbnb$Latitude), 
+    setView(lng = mean(airbnb_data$Longitude), lat = mean(airbnb_data$Latitude), 
             zoom = 10) |> 
-    addCircleMarkers(data = airbnb,
+    addCircleMarkers(data = airbnb_data,
         lat = ~ Latitude, 
         lng = ~ Longitude, 
         popup = ~ Name, 
@@ -40,7 +40,7 @@ Concerns about this.
   
 ##Two variable comparisons
 ```{r}
-airbnb_parsed <- airbnb |>
+airbnb_parsed <- airbnb_data |>
   mutate(parse_number(Price))
 ```
 
