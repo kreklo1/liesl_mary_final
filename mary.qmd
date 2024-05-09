@@ -57,10 +57,6 @@ rats_graph<-rats_location|>
 
 ```
 
-```{r}
-airbnb_location<-airbnb_data|>
-  select(Latitude, Longitude)
-```
 
 ```{r}
 house_icon <- makeIcon(
