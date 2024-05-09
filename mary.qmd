@@ -175,4 +175,5 @@ airbnb_with_boroughs|>
   theme_minimal() +
   labs(y = "Borough", x = "Price") 
 #Replace Price with "Beds", "Baths", `Average Rating`,`Number of Reviews`, `Cleanliness Rating`, etc.
+#Note that Staten Island only has one listing
 ```
