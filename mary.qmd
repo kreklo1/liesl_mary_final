@@ -14,6 +14,7 @@ library(emojifont)
 library(ggtext)
 library(leaflet)
 library(sf)
+library(tidyverse)
 library(readr)
 library(jsonlite)
 library(wordcloud)
@@ -124,3 +125,44 @@ wordcloud(words = word$word, freq = word$n, min.freq = 1,
 
 ```
 
+```{r}
+manhattan_lat_range <- c(40.70, 40.88)
+manhattan_lon_range <- c(-74.02, -73.93)
+
+brooklyn_lat_range <- c(40.57, 40.74)
+brooklyn_lon_range <- c(-74.04, -73.82)
+
+queens_lat_range <- c(40.53, 40.79)
+queens_lon_range <- c(-73.96, -73.71)
+
+bronx_lat_range <- c(40.79, 40.92)
+bronx_lon_range <- c(-73.93, -73.73)
+
+staten_island_lat_range <- c(40.48, 40.65)
+staten_island_lon_range <- c(-74.27, -74.04)
+
+
+airbnb_with_boroughs<-airbnb_data|>
+  mutate(borough = ifelse(airbnb_data$Latitude >= manhattan_lat_range[1] & airbnb_data$Latitude <= manhattan_lat_range[2] &
+                                airbnb_data$Longitude >= manhattan_lon_range[1] & airbnb_data$Longitude <= manhattan_lon_range[2],
+                              "Manhattan",
+                              ifelse(airbnb_data$Latitude >= brooklyn_lat_range[1] & airbnb_data$Latitude <= brooklyn_lat_range[2] &
+                                       airbnb_data$Longitude >= brooklyn_lon_range[1] & airbnb_data$Longitude <= brooklyn_lon_range[2],
+                                     "Brooklyn",
+                                     ifelse(airbnb_data$Latitude >= queens_lat_range[1] & airbnb_data$Latitude <= queens_lat_range[2] &
+                                              airbnb_data$Longitude >= queens_lon_range[1] & airbnb_data$Longitude <= queens_lon_range[2],
+                                            "Queens",
+                                            ifelse(airbnb_data$Latitude >= bronx_lat_range[1] & airbnb_data$Latitude <= bronx_lat_range[2] &
+                                                     airbnb_data$Longitude >= bronx_lon_range[1] & airbnb_data$Longitude <= bronx_lon_range[2],
+                                                   "Bronx",
+                                                   ifelse(airbnb_data$Latitude >= staten_island_lat_range[1] & airbnb_data$Latitude <= staten_island_lat_range[2] &
+                                                            airbnb_data$Longitude >= staten_island_lon_range[1] & airbnb_data$Longitude <= staten_island_lon_range[2],
+                                                      "Staten Island", NA))))))
+
+
+
+airbnb_with_boroughs|>
+  select(Title, Latitude, Longitude, borough)|>
+  print(n=Inf)
+
+```
