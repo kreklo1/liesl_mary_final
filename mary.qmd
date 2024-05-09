@@ -157,12 +157,22 @@ airbnb_with_boroughs<-airbnb_data|>
                                                    "Bronx",
                                                    ifelse(airbnb_data$Latitude >= staten_island_lat_range[1] & airbnb_data$Latitude <= staten_island_lat_range[2] &
                                                             airbnb_data$Longitude >= staten_island_lon_range[1] & airbnb_data$Longitude <= staten_island_lon_range[2],
-                                                      "Staten Island", NA))))))
+                                                      "Staten Island", "No Borough"))))))
 
 
 
 airbnb_with_boroughs|>
   select(Title, Latitude, Longitude, borough)|>
   print(n=Inf)
+```
 
+```{r}
+airbnb_with_boroughs|>
+  mutate(Price=parse_number(Price))|>
+  group_by(borough)|>
+  ggplot()+
+  geom_boxplot(aes(y = borough, x = Price)) +
+  theme_minimal() +
+  labs(y = "Borough", x = "Price") 
+#Replace Price with "Beds", "Baths", `Average Rating`,`Number of Reviews`, `Cleanliness Rating`, etc.
 ```
