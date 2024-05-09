@@ -114,7 +114,7 @@ word <- airbnb_data |>
   mutate(word = str_remove_all(word, "[^[:alpha:]]")) |>
   anti_join(stop_words) |>
   count(word, sort=TRUE)|>
-  slice(2:378)
+  slice(2:n)
 
 pinkalicious <- c("#FF6FFF", "#FF5D99", "hotpink", "#FFCFF7", "deeppink")
 
@@ -158,12 +158,6 @@ airbnb_with_boroughs<-airbnb_data|>
                                                    ifelse(airbnb_data$Latitude >= staten_island_lat_range[1] & airbnb_data$Latitude <= staten_island_lat_range[2] &
                                                             airbnb_data$Longitude >= staten_island_lon_range[1] & airbnb_data$Longitude <= staten_island_lon_range[2],
                                                       "Staten Island", "No Borough"))))))
-
-
-
-airbnb_with_boroughs|>
-  select(Title, Latitude, Longitude, borough)|>
-  print(n=Inf)
 ```
 
 ```{r}
@@ -171,7 +165,7 @@ airbnb_with_boroughs|>
   mutate(Price=parse_number(Price))|>
   group_by(borough)|>
   ggplot()+
-  geom_boxplot(aes(y = borough, x = Price)) +
+  geom_boxplot(aes(y = borough, x = Price), color="deeppink") +
   theme_minimal() +
   labs(y = "Borough", x = "Price") 
 #Replace Price with "Beds", "Baths", `Average Rating`,`Number of Reviews`, `Cleanliness Rating`, etc.
