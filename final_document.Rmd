@@ -127,75 +127,22 @@ leaflet() |>
 Airbnb with Other Variable
 ==========================
 ```{r interactive map, echo = FALSE}
-house_icon <- makeIcon(
-  iconUrl = "https://www.iconeasy.com/icon/png/System/Vista%20General/house.png",
-  iconWidth = 29,
-  iconHeight = 29
-)
-
 rat_icon <- makeIcon(
   iconUrl = "https://icons.iconarchive.com/icons/google/noto-emoji-animals-nature/256/22251-rat-icon.png",
   iconWidth = 28,
   iconHeight = 28
 )
 
-leaflet() |>
-  addTiles() |>
-  setView(lng = -74.00, lat = 40.71, zoom = 12) |>
-  addMarkers(data = airbnb_data, lng = ~Longitude, lat = ~Latitude, icon = house_icon,
-     popup = ~paste("<a href='", `Listing URL`, "'><b>", Title, "</b></a>", "</br>", Name, "</br>", Price, Qualifier))|>
-  addMarkers(data=rats_graph, lng=~Longitude, lat=~Latitude, icon = rat_icon, popup = ~paste("squeak squeak:)"))
-
-```
-
-
-```{r}
 carrot_icon <- makeIcon(
   iconUrl = "https://images.emojiterra.com/google/noto-emoji/unicode-15.1/color/svg/1f955.svg",
   iconWidth = 29,
   iconHeight = 29
 )
 
-leaflet() |>
-  addTiles() |>
-  setView(lng = -74.00, lat = 40.71, zoom = 12)|>
-  addMarkers(data=farmers_markets, lng=~longitude, lat=~latitude, icon = carrot_icon, popup = ~paste(marketname, "</br>", daysoperation, hoursoperations))
 ```
 
 ```{r}
-leaflet() |>
-  addTiles() |>
-  setView(lng = -74.00, lat = 40.71, zoom = 12)|>
-  addPolygons(data=parks_sf, color="deeppink", popup = ~paste(SIGNNAME))
-```
 
-Description Word Analysis
-==========================
-```{r}
-word <- airbnb_data |>
-  select(Name) |>
-  mutate(Name = str_to_lower(Name),
-         word = str_split(Name, "\\s+"))|>
-         unnest(word) |>
-  mutate(word = str_remove_all(word, "[^[:alpha:]]")) |>
-  anti_join(stop_words) |>
-  count(word, sort=TRUE)|>
-  slice(2:378)
-
-pinkalicious <- c("#FF6FFF", "#FF5D99", "hotpink", "#FFCFF7", "deeppink")
-
-
-wordcloud(words = word$word, freq = word$n, min.freq = 1,
-          max.words = 100, random.order = FALSE, rot.per = 0.35, 
-          colors = pinkalicious)
-
-```
-
-
-Airbnb with Other Variable Take 2
-==========================
-
-```{r}
 ui <- fluidPage(
   tags$h2("Map with Airbnb Data and Parks"),
   tags$p("This map displays Airbnb data and other variables."),
@@ -240,7 +187,32 @@ server <- function(input, output, session) {
 
 shinyApp(ui, server)
 
+
 ```
+
+
+Description Word Analysis
+==========================
+```{r}
+word <- airbnb_data |>
+  select(Name) |>
+  mutate(Name = str_to_lower(Name),
+         word = str_split(Name, "\\s+"))|>
+         unnest(word) |>
+  mutate(word = str_remove_all(word, "[^[:alpha:]]")) |>
+  anti_join(stop_words) |>
+  count(word, sort=TRUE)|>
+  slice(2:378)
+
+pinkalicious <- c("#FF6FFF", "#FF5D99", "hotpink", "#FFCFF7", "deeppink")
+
+
+wordcloud(words = word$word, freq = word$n, min.freq = 1,
+          max.words = 100, random.order = FALSE, rot.per = 0.35, 
+          colors = pinkalicious)
+
+```
+
 
 Summary Statistics By Borough
 ==========================
