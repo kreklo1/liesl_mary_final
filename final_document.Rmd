@@ -23,6 +23,7 @@ library(readr)
 library(jsonlite)
 library(wordcloud)
 library(tidytext)
+library(wordcloud2)
 data("rats_location")
 data("rats_graph")
 data("airbnb_parsed")
@@ -144,11 +145,11 @@ carrot_icon <- makeIcon(
 ```{r}
 
 ui <- fluidPage(
-  tags$h2("Map with Airbnb Data and Parks"),
-  tags$p("This map displays Airbnb data and other variables."),
-  checkboxInput("overlay_parks", "Overlay Parks", FALSE),
-  checkboxInput("overlay_rats", "Overlay Rats", FALSE),
-  checkboxInput("overlay_markets", "Overlay Farmer's Markets", FALSE),
+  tags$h2("Map with Airbnb Data and other Amenities"),
+  tags$p("Check the boxes of the variables you want to see added to the map."),
+  checkboxInput("overlay_parks", "Parks", FALSE),
+  checkboxInput("overlay_rats", "Rats", FALSE),
+  checkboxInput("overlay_markets", "Farmer's Markets", FALSE),
   leafletOutput("map")
 )
 
@@ -194,22 +195,49 @@ shinyApp(ui, server)
 Description Word Analysis
 ==========================
 ```{r}
-word <- airbnb_data |>
-  select(Name) |>
-  mutate(Name = str_to_lower(Name),
-         word = str_split(Name, "\\s+"))|>
-         unnest(word) |>
-  mutate(word = str_remove_all(word, "[^[:alpha:]]")) |>
-  anti_join(stop_words) |>
-  count(word, sort=TRUE)|>
-  slice(2:378)
+ui <- fluidPage(
+  sidebarLayout(
+    sidebarPanel(
+      selectInput("choice", "Select an option:",
+                  choices = c("Name", "Title"))
+    ),
+    mainPanel(
+      wordcloud2Output("wordcloud")
+    )
+  )
+)
 
-pinkalicious <- c("#FF6FFF", "#FF5D99", "hotpink", "#FFCFF7", "deeppink")
+server <- function(input, output) {
+  output$wordcloud <- renderWordcloud2({
+    if (input$choice == "Name") {
+      word <- airbnb_data |>
+        select(Name) |>
+        mutate(Name = str_to_lower(Name),
+               word = str_split(Name, "\\s+")) |>
+        unnest(word) |>
+        mutate(word = str_remove_all(word, "[^[:alpha:]]")) |>
+        anti_join(stop_words) |>
+        count(word, sort=TRUE) |>
+        slice(2:n)
+    } else if (input$choice == "Title") {
+      word <- airbnb_data |>
+        select(Title) |>
+        mutate(Title = str_to_lower(Title),
+               title = str_split(Title, "\\s+")) |>
+        unnest(title) |>
+        mutate(word = str_remove_all(title, "[^[:alpha:]]")) |>
+        anti_join(stop_words) |>
+        count(title, sort=TRUE) |>
+        slice(2:n)
+    }
+    
+    pinkalicious <- c("#FF6FFF", "#FF5D99", "hotpink", "#FFCFF7", "deeppink")
+    
+    wordcloud2(data = word, size = 1, color = pinkalicious)
+  })
+}
 
-
-wordcloud(words = word$word, freq = word$n, min.freq = 1,
-          max.words = 100, random.order = FALSE, rot.per = 0.35, 
-          colors = pinkalicious)
+shinyApp(ui = ui, server = server)
 
 ```
 
