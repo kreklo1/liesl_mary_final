@@ -254,7 +254,7 @@ shinyApp(ui = ui, server = server)
 
 Summary Statistics By Borough
 ==========================
-```{r}
+```{r, include = FALSE}
 summary_stats_data <- airbnb_with_boroughs|>
   mutate(Price=parse_number(Price))|>
   group_by(borough)
@@ -275,18 +275,18 @@ inputPanel(
   selectInput("x", label = "x-axis variable:",
     choices = c("Price" = "price_parsed",
                 "⭐ Review" = "Average Rating",
-                "Number of Reviews" = "Number of Reviews")),
-    selectInput("y", label = "y-axis variable:",
-    choices = c("Price" = "price_parsed",
-                "⭐ Review" = "Average Rating",
-                "Number of Reviews" = "Number of Reviews"))
+                "Number of Reviews" = "Number of Reviews"
+                ))
 )
 
 renderPlot({
 
-        ggplot(airbnb_parsed, aes(x = .data[[input$x]], y =  .data[[input$y]])) +
-          geom_jitter(size = 2, alpha = 0.25, , color = "hotpink") +
-          geom_smooth(se = FALSE)
+ ggplot()+
+  geom_boxplot(data = summary_stats_data, 
+               aes( x = .data[[input$x]]), y = borough, 
+               color="deeppink") +
+  labs(y = "Borough", x = "Price") 
+  
 })
 ```
 
