@@ -126,5 +126,17 @@ renderPlot({
 ```
 
 
+```{r}
+summary_stats_data <- airbnb_with_boroughs|>
+  mutate(Price=parse_number(Price))|>
+  group_by(borough)
 
+summary_stats_data |>
+  ggplot()+
+  geom_boxplot(aes(y = borough, x = Price), color="deeppink") +
+  theme_minimal() +
+  labs(y = "Borough", x = "Price") 
+#Replace Price with "Beds", "Baths", `Average Rating`,`Number of Reviews`, `Cleanliness Rating`, etc.
+#Note that Staten Island only has one listing
+```
 
