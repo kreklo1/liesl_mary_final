@@ -24,6 +24,7 @@ library(jsonlite)
 library(wordcloud)
 library(tidytext)
 library(wordcloud2)
+library(AER)
 data("rats_location")
 data("rats_graph")
 data("airbnb_parsed")
@@ -259,10 +260,26 @@ airbnb_with_boroughs|>
 
 Two Variable Comparison
 ==========================
-```{r}
-airbnb_parsed |>
-  ggplot(aes(y = price_parsed, x = `Average Rating`)) +
-  geom_point() 
+```{r, echo=FALSE}
+titlePanel("Two Variable Comparison")
+
+inputPanel(
+  selectInput("x", label = "x-axis variable:",
+    choices = c("Price" = "price_parsed",
+                "⭐ Review" = "Average Rating",
+                "Number of Reviews" = "Number of Reviews")),
+    selectInput("y", label = "y-axis variable:",
+    choices = c("Price" = "price_parsed",
+                "⭐ Review" = "Average Rating",
+                "Number of Reviews" = "Number of Reviews"))
+)
+
+renderPlot({
+
+        ggplot(airbnb_parsed, aes(x = .data[[input$x]], y =  .data[[input$y]])) +
+          geom_jitter(size = 2, alpha = 0.25, , color = "hotpink") +
+          geom_smooth(se = FALSE)
+})
 ```
 
 Our Favorites
