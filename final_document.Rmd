@@ -22,6 +22,7 @@ library(wordcloud)
 library(tidytext)
 library(wordcloud2)
 library(AER)
+library(kableExtra)
 data("rats_location")
 data("rats_graph")
 data("airbnb_parsed")
@@ -316,6 +317,44 @@ renderPlot({
 
 Our Favorites
 ==========================
+## Column
+
+**Mary's Favorite**
+
+I chose a condo in Manhattan with the Name "Cozy & Chic, Chelsea High Line Studio" as my favorite AirBnb in New York City. As you can see from the table below, this AirBnb is a Guest Favorite, and is very highly rated.
+
+```{r, echo=FALSE}
+mary_airbnb<-airbnb_with_boroughs|>
+  filter(Name=="New! Cozy & Chic, Chelsea High Line Studio")|>
+  select("Name", "Title", "Price", "Baths", "Bedrooms", "Average Rating", "Number of Reviews", "Room Type Category", "More Details", "borough")
+
+kable(mary_airbnb, format = "html")|>
+  kable_styling()
+```
+
+Below you can see where this airbnb is in relation to others. As you can see, it is the perfect location so you are not directly in the middle of everything, but you still are super close and conveniently located! The views are also great from the condo. Check out [this link](https://www.airbnb.com/rooms/808386228706904148?source_impression_id=p3_1715360488_%2FcmH40MOuzoem%2Bl9) to learn more about it!
+
+```{r, echo=FALSE}
+leaflet() |>
+    addTiles() |>
+    setView(lng = mean(airbnb_data$Longitude), lat = mean(airbnb_data$Latitude), 
+            zoom = 10) |> 
+    addCircleMarkers(data = airbnb_data,
+        lat = ~ Latitude, 
+        lng = ~ Longitude, 
+        popup = ~ Name, 
+        radius = ~ 10,  
+        weight = 3,
+        color = "hotpink", 
+        fillColor = "pink")|>
+ addMarkers(lng = -74.00579, lat = 40.74473, popup = "Mary's Favorite!", 
+               icon = leaflet::makeIcon(iconUrl = "https://www.clipartmax.com/png/full/85-851033_filesolid-bright-green-star-1-green-star-no-background.png", iconWidth = 50, iconHeight = 50))
+```
+
+Next time you are looking for a place to stay in New York City, consider splurging a bit on this beautiful AirBnb! There are 3 farmer's markets and several parks nearby, so lots to do and explore!
+
+
+## Column
 
 
 

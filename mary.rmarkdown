@@ -187,43 +187,16 @@ airbnb_with_boroughs|>
 #Note that Staten Island only has one listing
 ```
 
-# About
-
-## Column
-
-**Mary's Favorite**
-
-Mary chose a condo in Manhattan with the Name "Cozy & Chic, Chelsea High Line Studio" as her favorite AirBnb in New York City. As you can see from the table below, this AirBnb is a Guest Favorite, and is very highly rated.
-
 ```{r, echo=FALSE, include=FALSE}
 library(kableExtra)
 
 mary_airbnb<-airbnb_data|>
   filter(Name=="New! Cozy & Chic, Chelsea High Line Studio")|>
-  select("Name", "Title", "Price", "Baths", "Bedrooms", "Average Rating", "Number of Reviews", "Room Type Category", "More Details", "borough")
+  select("Name", "Title", "Baths", "Bedrooms", "Average Rating", "Number of Reviews", "Room Type Category", "More Details", "borough")
+
 kable(mary_airbnb, format = "html")|>
   kable_styling()
 
 mary_airbnb
 ```
 
-Below you can see where this airbnb is in relation to others. As you can see, it is the perfect location so you are not directly in the middle of everything, but you still are super close and conveniently located! The views are also great from the condo. Check out [this link](https://www.airbnb.com/rooms/808386228706904148?source_impression_id=p3_1715360488_%2FcmH40MOuzoem%2Bl9) to learn more about it!
-
-```{r}
-leaflet() |>
-    addTiles() |>
-    setView(lng = mean(airbnb_data$Longitude), lat = mean(airbnb_data$Latitude), 
-            zoom = 10) |> 
-    addCircleMarkers(data = airbnb_data,
-        lat = ~ Latitude, 
-        lng = ~ Longitude, 
-        popup = ~ Name, 
-        radius = ~ 10,  
-        weight = 3,
-        color = "hotpink", 
-        fillColor = "pink")|>
- addMarkers(lng = -74.00579, lat = 40.74473, popup = "Mary's Favorite!", 
-               icon = leaflet::makeIcon(iconUrl = "https://www.clipartmax.com/png/full/85-851033_filesolid-bright-green-star-1-green-star-no-background.png", iconWidth = 50, iconHeight = 50))
-```
-
-## Column
