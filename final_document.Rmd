@@ -274,7 +274,7 @@ titlePanel("Summary Statistics by Borough")
 
 inputPanel(
   selectInput("x", label = "x-axis variable:",
-    choices = c("Price" = "price_parsed",
+    choices = c("Price" = "Price",
                 "⭐ Review" = "Average Rating",
                 "Number of Reviews" = "Number of Reviews"
                 ))
