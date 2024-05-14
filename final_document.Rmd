@@ -1,6 +1,7 @@
 ---
 title: "Liesl Mary Final"
-output: flexdashboard::flex_dashboard
+output: 
+  flexdashboard::flex_dashboard
 runtime: shiny
 ---
 
@@ -24,6 +25,15 @@ library(wordcloud2)
 library(AER)
 library(kableExtra)
 library(beepr)
+library(shinyWidgets)
+
+
+setBackgroundColor(
+  color = "ghostwhite",
+  gradient = c("linear", "radial"),
+  direction = c("bottom", "top", "right", "left"),
+  shinydashboard = TRUE
+)
 ```
 
 
