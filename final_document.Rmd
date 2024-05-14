@@ -1,9 +1,14 @@
 ---
 title: "Liesl Mary Final"
-output: 
-  flexdashboard::flex_dashboard
+output:
+  flexdashboard::flex_dashboard:
+    theme:
+      bg: "#fcf7e9"
+      fg: "#d41495" 
+      primary: "#d41495"
 runtime: shiny
 ---
+
 
 ```{r libraries and data, include = FALSE}
 library(ggplot2)
@@ -28,12 +33,6 @@ library(beepr)
 library(shinyWidgets)
 
 
-setBackgroundColor(
-  color = "ghostwhite",
-  gradient = c("linear", "radial"),
-  direction = c("bottom", "top", "right", "left"),
-  shinydashboard = TRUE
-)
 ```
 
 
@@ -345,7 +344,7 @@ star_icon<-makeIcon(iconUrl="https://www.clipartmax.com/png/full/85-851033_files
 renderLeaflet({
 leaflet(width = "100%", height = 600) |>
   addTiles() |>
-  setView(lng = -74.00, lat = 40.71, zoom = 12)|>
+  setView(lng = -74.00, lat = 40.74, zoom = 12)|>
   addMarkers(data=farmers_markets, lng=~longitude, lat=~latitude, icon = carrot_icon, popup = ~paste(marketname, "</br>", daysoperation, hoursoperations))|>
   addMarkers(data=rats_graph, lng=~Longitude, lat=~Latitude, icon = rat_icon, popup = ~paste("squeak squeak:)"))|>
   addPolygons(data=parks_sf, color="deeppink", popup = ~paste(SIGNNAME))|>
