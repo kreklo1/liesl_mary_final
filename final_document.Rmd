@@ -23,10 +23,6 @@ library(tidytext)
 library(wordcloud2)
 library(AER)
 library(kableExtra)
-data("rats_location")
-data("rats_graph")
-data("airbnb_parsed")
-
 ```
 
 
@@ -64,6 +60,8 @@ bronx_lon_range <- c(-73.93, -73.73)
 staten_island_lat_range <- c(40.48, 40.65)
 staten_island_lon_range <- c(-74.27, -74.04)
 
+airbnb_data <- read_csv("airbnb_data.csv")
+
 
 airbnb_with_boroughs<-airbnb_data|>
   mutate(borough = ifelse(airbnb_data$Latitude >= manhattan_lat_range[1] & airbnb_data$Latitude <= manhattan_lat_range[2] &
@@ -82,7 +80,6 @@ airbnb_with_boroughs<-airbnb_data|>
                                                             airbnb_data$Longitude >= staten_island_lon_range[1] & airbnb_data$Longitude <= staten_island_lon_range[2],
                                                       "Staten Island", "No Borough"))))))
 
-airbnb_data <- read_csv("airbnb_data.csv")
 
 rats <- read_csv("Rat_Sightings_20240507.csv")|>
   filter(Latitude!="NA",
@@ -206,49 +203,36 @@ shinyApp(ui, server)
 Description Word Analysis
 ==========================
 ```{r}
-ui <- fluidPage(
-  sidebarLayout(
-    sidebarPanel(
-      selectInput("choice", "Select an option:",
-                  choices = c("Name", "Title"))
-    ),
-    mainPanel(
-      wordcloud2Output("wordcloud")
-    )
-  )
-)
+selectInput("choice", "Select an option:",
+            choices = c("Name", "Title"))
 
-server <- function(input, output) {
-  output$wordcloud <- renderWordcloud2({
-    if (input$choice == "Name") {
-      word <- airbnb_data |>
-        select(Name) |>
-        mutate(Name = str_to_lower(Name),
-               word = str_split(Name, "\\s+")) |>
-        unnest(word) |>
-        mutate(word = str_remove_all(word, "[^[:alpha:]]")) |>
-        anti_join(stop_words) |>
-        count(word, sort=TRUE) |>
-        slice(2:n)
-    } else if (input$choice == "Title") {
-      word <- airbnb_data |>
-        select(Title) |>
-        mutate(Title = str_to_lower(Title),
-               title = str_split(Title, "\\s+")) |>
-        unnest(title) |>
-        mutate(word = str_remove_all(title, "[^[:alpha:]]")) |>
-        anti_join(stop_words) |>
-        count(title, sort=TRUE) |>
-        slice(2:n)
-    }
-    
-    pinkalicious <- c("#FF6FFF", "#FF5D99", "hotpink", "#FFCFF7", "deeppink")
-    
-    wordcloud2(data = word, size = 1, color = pinkalicious)
-  })
-}
-
-shinyApp(ui = ui, server = server)
+renderWordcloud2({
+  if (input$choice == "Name") {
+    word <- airbnb_data |>
+      select(Name) |>
+      mutate(Name = str_to_lower(Name),
+             word = str_split(Name, "\\s+")) |>
+      unnest(word) |>
+      mutate(word = str_remove_all(word, "[^[:alpha:]]")) |>
+      anti_join(stop_words) |>
+      count(word, sort=TRUE) |>
+      slice(2:n)
+  } else if (input$choice == "Title") {
+    word <- airbnb_data |>
+      select(Title) |>
+      mutate(Title = str_to_lower(Title),
+             title = str_split(Title, "\\s+")) |>
+      unnest(title) |>
+      mutate(word = str_remove_all(title, "[^[:alpha:]]")) |>
+      anti_join(stop_words) |>
+      count(title, sort=TRUE) |>
+      slice(2:n)
+  }
+  
+  pinkalicious <- c("#FF6FFF", "#FF5D99", "hotpink", "#FFCFF7", "deeppink")
+  
+  wordcloud2(data = word, size = 1, color = pinkalicious)
+})
 
 ```
 
@@ -335,23 +319,33 @@ kable(mary_airbnb, format = "html")|>
 Below you can see where this airbnb is in relation to others. As you can see, it is the perfect location so you are not directly in the middle of everything, but you still are super close and conveniently located! The views are also great from the condo. Check out [this link](https://www.airbnb.com/rooms/808386228706904148?source_impression_id=p3_1715360488_%2FcmH40MOuzoem%2Bl9) to learn more about it!
 
 ```{r, echo=FALSE}
-leaflet() |>
-    addTiles() |>
-    setView(lng = mean(airbnb_data$Longitude), lat = mean(airbnb_data$Latitude), 
-            zoom = 10) |> 
-    addCircleMarkers(data = airbnb_data,
-        lat = ~ Latitude, 
-        lng = ~ Longitude, 
-        popup = ~ Name, 
-        radius = ~ 10,  
-        weight = 3,
-        color = "hotpink", 
-        fillColor = "pink")|>
- addMarkers(lng = -74.00579, lat = 40.74473, popup = "Mary's Favorite!", 
-               icon = leaflet::makeIcon(iconUrl = "https://www.clipartmax.com/png/full/85-851033_filesolid-bright-green-star-1-green-star-no-background.png", iconWidth = 50, iconHeight = 50))
+rat_icon <- makeIcon(
+  iconUrl = "https://icons.iconarchive.com/icons/google/noto-emoji-animals-nature/256/22251-rat-icon.png",
+  iconWidth = 28,
+  iconHeight = 28
+)
+
+carrot_icon <- makeIcon(
+  iconUrl = "https://images.emojiterra.com/google/noto-emoji/unicode-15.1/color/svg/1f955.svg",
+  iconWidth = 29,
+  iconHeight = 29
+)
+
+star_icon<-makeIcon(iconUrl="https://www.clipartmax.com/png/full/85-851033_filesolid-bright-green-star-1-green-star-no-background.png", iconWidth=48, iconHeight=48)
+
+renderLeaflet({
+leaflet(width = "100%", height = 600) |>
+  addTiles() |>
+  setView(lng = -74.00, lat = 40.71, zoom = 12)|>
+  addMarkers(data=farmers_markets, lng=~longitude, lat=~latitude, icon = carrot_icon, popup = ~paste(marketname, "</br>", daysoperation, hoursoperations))|>
+  addMarkers(data=rats_graph, lng=~Longitude, lat=~Latitude, icon = rat_icon, popup = ~paste("squeak squeak:)"))|>
+  addPolygons(data=parks_sf, color="deeppink", popup = ~paste(SIGNNAME))|>
+  addMarkers(lng = -74.00579, lat = 40.74473, popup = "Mary's Favorite!", 
+               icon = star_icon)
+})
 ```
 
-Next time you are looking for a place to stay in New York City, consider splurging a bit on this beautiful AirBnb! There are 3 farmer's markets and several parks nearby, so lots to do and explore!
+Next time you are looking for a place to stay in New York City, consider splurging a bit on this beautiful AirBnb! Sadly, none of the rats in our sampling of rat sightings were spotted around here, so no bro-dents, however, there are 3 farmer's markets and several parks nearby so lots to do and explore!
 
 
 ## Column

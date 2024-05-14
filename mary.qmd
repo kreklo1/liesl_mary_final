@@ -81,16 +81,28 @@ leaflet() |>
 ```
 
 ```{r}
+rat_icon <- makeIcon(
+  iconUrl = "https://icons.iconarchive.com/icons/google/noto-emoji-animals-nature/256/22251-rat-icon.png",
+  iconWidth = 28,
+  iconHeight = 28
+)
+
 carrot_icon <- makeIcon(
   iconUrl = "https://images.emojiterra.com/google/noto-emoji/unicode-15.1/color/svg/1f955.svg",
   iconWidth = 29,
   iconHeight = 29
 )
 
+star_icon<-makeIcon(iconUrl="https://www.clipartmax.com/png/full/85-851033_filesolid-bright-green-star-1-green-star-no-background.png", iconWidth=48, iconHeight=48)
+
 leaflet() |>
   addTiles() |>
   setView(lng = -74.00, lat = 40.71, zoom = 12)|>
-  addMarkers(data=farmers_markets, lng=~longitude, lat=~latitude, icon = carrot_icon, popup = ~paste(marketname, "</br>", daysoperation, hoursoperations))
+  addMarkers(data=farmers_markets, lng=~longitude, lat=~latitude, icon = carrot_icon, popup = ~paste(marketname, "</br>", daysoperation, hoursoperations))|>
+  addMarkers(data=rats_graph, lng=~Longitude, lat=~Latitude, icon = rat_icon, popup = ~paste("squeak squeak:)"))|>
+  addPolygons(data=parks_sf, color="deeppink", popup = ~paste(SIGNNAME))|>
+  addMarkers(lng = -74.00579, lat = 40.74473, popup = "Mary's Favorite!", 
+               icon = star_icon)
 ```
 
 ```{r}
