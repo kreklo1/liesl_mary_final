@@ -23,6 +23,7 @@ library(tidytext)
 library(wordcloud2)
 library(AER)
 library(kableExtra)
+library(beepr)
 ```
 
 
@@ -113,7 +114,7 @@ Column
 
 **About our Project**
 
-For our final project the goal was to scrape data from the internet and tell a story about it using the skills and tools we have acquired this semester in Data Science 2. Inspired by our project for Data Science 1 last semester, we decided to scrape the Airbnb website to acquire data on rentals in New York City. Alongside the Airbnb data we also used our data set from last semester that reports locations of rat sightings in NYC, a novel data set that includes locations of farmers markets in NYC, and finally, another novel data set that includes locations of parks in NYC. Through this project we will show where all of the Airbnb rentals are in NYC as well as where they are in relationship to rats, farmers markets, and parks. We have also included a word cloud to show the most prevalent words used in titles of Airbnbs. Next we will have two different interactive maps that show summary statistics for different numeric variables for each borough **edit this sentence**. Lastly we will share our personal favorites. We hope you'll enjoy following along as we squeak out the answers to our questions about Airbnb's in NYC!
+For our final project the goal was to scrape data from the internet and tell a story about it using the skills and tools we have acquired this semester in Data Science 2. Inspired by our project for Data Science 1 last semester, we decided to scrape the Airbnb website to acquire data on rentals in New York City. Alongside the Airbnb data we also used our data set from last semester that reports locations of rat sightings in NYC, a novel data set that includes locations of farmers markets in NYC, and finally, another novel data set that includes locations of parks in NYC. Through this project we will show where all of the Airbnb rentals are in NYC as well as where they are in relationship to rats, farmers markets, and parks. We have also included a word cloud to show the most prevalent words used in titles of Airbnbs. Next we will have two different interactive maps that show summary statistics for different numeric variables for each borough. Lastly we will share our personal favorites. We hope you'll enjoy following along as we squeak out the answers to our questions about Airbnb's in NYC!
 
 Column 
 -------------------------
@@ -241,8 +242,7 @@ Summary Statistics By Borough
 ==========================
 ```{r, include = FALSE}
 summary_stats_data <- airbnb_with_boroughs|>
-  mutate(Price=parse_number(Price))|>
-  group_by(borough)
+  mutate(Price=parse_number(Price))
 
 summary_stats_data |> 
  ggplot()+
@@ -266,9 +266,8 @@ inputPanel(
 
 renderPlot({
 
- ggplot()+
-  geom_boxplot(data = summary_stats_data, 
-               aes( x = .data[[input$x]]), y = summary_stats_data$borough, 
+ ggplot(data = summary_stats_data)+
+  geom_boxplot(aes( x = .data[[input$x]], y = borough), 
                color="deeppink") +
   labs(y = "Borough", x = "Price") 
   
@@ -343,6 +342,7 @@ leaflet(width = "100%", height = 600) |>
   addMarkers(lng = -74.00579, lat = 40.74473, popup = "Mary's Favorite!", 
                icon = star_icon)
 })
+beep(sound = 11)
 ```
 
 Next time you are looking for a place to stay in New York City, consider splurging a bit on this beautiful AirBnb! Sadly, none of the rats in our sampling of rat sightings were spotted around here, so no bro-dents, however, there are 3 farmer's markets and several parks nearby so lots to do and explore!

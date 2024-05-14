@@ -127,6 +127,7 @@ renderPlot({
 
 
 ```{r}
+library(beepr)
 summary_stats_data <- airbnb_with_boroughs|>
   mutate(Price=parse_number(Price))|>
   group_by(borough)
@@ -138,5 +139,6 @@ summary_stats_data |>
   labs(y = "Borough", x = "Price") 
 #Replace Price with "Beds", "Baths", `Average Rating`,`Number of Reviews`, `Cleanliness Rating`, etc.
 #Note that Staten Island only has one listing
+beep(sound = 11)
 ```
 
