@@ -251,11 +251,12 @@ Summary Statistics By Borough
 ==========================
 ```{r, include = FALSE}
 summary_stats_data <- airbnb_with_boroughs|>
-  mutate(Price=parse_number(Price))
+  mutate(Price=parse_number(Price),
+         Borough=borough)
 
 summary_stats_data |> 
  ggplot()+
-  geom_boxplot(aes(y = borough, x = Price), color="deeppink") +
+  geom_boxplot(aes(y = Borough, x = Price), color="deeppink") +
   theme_minimal() +
   labs(y = "Borough", x = "Price") 
 #Replace Price with "Beds", "Baths", `Average Rating`,`Number of Reviews`, `Cleanliness Rating`, etc.
@@ -309,7 +310,9 @@ renderPlot({
 
 Our Favorites
 ==========================
-## Column
+
+Column {.col-md-4}
+-------------------------
 
 **Mary's Favorite**
 
@@ -355,6 +358,12 @@ beep(sound = 11)
 ```
 
 Next time you are looking for a place to stay in New York City, consider splurging a bit on this beautiful AirBnb! Sadly, none of the rats in our sampling of rat sightings were spotted around here, so no bro-dents, however, there are 3 farmer's markets and several parks nearby so lots to do and explore!
+
+Column {.col-md-1}
+-------------------------
+
+Column {.col-md-4}
+-------------------------
 
 **Liesl's Favorite**
 
@@ -408,7 +417,6 @@ leaflet(width = "100%", height = 600) |>
 beep(sound = 11)
 ```
 
-## Column
 
 
 
