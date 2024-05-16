@@ -396,7 +396,7 @@ kable(liesls_fav, format = "html")|>
   kable_styling()
 ```
 
-
+On the map below you can see where this Airbnb is and its relationship to all of the other rentals, the rat sightings, the parks, and the farmer's markets. The location is conveniently placed in SoHo with lots of shops and resteraunts nearby. 
 
 ```{r, echo=FALSE}
 rat_icon <- makeIcon(
