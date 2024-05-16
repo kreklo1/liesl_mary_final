@@ -1,0 +1,142 @@
+---
+title: "help Final"
+output:
+  flexdashboard::flex_dashboard:
+    theme:
+      bg: "#fcf7e9"
+      fg: "#d41495" 
+      primary: "#d41495"
+runtime: shiny
+---
+
+
+```{r libraries and data, include = FALSE}
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+library(lubridate)
+library(stringr)
+library(emojifont)
+library(ggtext)
+library(leaflet)
+library(sf)
+library(tidyverse)
+library(shiny)
+library(readr)
+library(jsonlite)
+library(wordcloud)
+library(tidytext)
+library(wordcloud2)
+library(AER)
+library(kableExtra)
+library(beepr)
+library(shinyWidgets)
+```
+
+```{r data entry, include=FALSE}
+airbnb_data <- read_csv("airbnb_data.csv")
+
+rats <- read_csv("Rat_Sightings_20240507.csv")|>
+  filter(Latitude!="NA",
+         Longitude!="NA")
+
+parks <- read_csv("Parks_Properties_20240507.csv")
+parks_sf <- st_as_sf(parks, wkt = "multipolygon")
+
+
+url<- "https://data.cityofnewyork.us/resource/fi97-k4k6.json"
+
+farmers_markets <- fromJSON(url)|>
+  mutate(latitude=as.numeric(latitude),
+         longitude=as.numeric(longitude))
+
+
+
+manhattan_lat_range <- c(40.70, 40.88)
+manhattan_lon_range <- c(-74.02, -73.93)
+
+brooklyn_lat_range <- c(40.57, 40.74)
+brooklyn_lon_range <- c(-74.04, -73.82)
+
+queens_lat_range <- c(40.53, 40.79)
+queens_lon_range <- c(-73.96, -73.71)
+
+bronx_lat_range <- c(40.79, 40.92)
+bronx_lon_range <- c(-73.93, -73.73)
+
+staten_island_lat_range <- c(40.48, 40.65)
+staten_island_lon_range <- c(-74.27, -74.04)
+
+airbnb_data <- read_csv("airbnb_data.csv")
+
+
+airbnb_with_boroughs<-airbnb_data|>
+  mutate(borough = ifelse(airbnb_data$Latitude >= manhattan_lat_range[1] & airbnb_data$Latitude <= manhattan_lat_range[2] &
+                                airbnb_data$Longitude >= manhattan_lon_range[1] & airbnb_data$Longitude <= manhattan_lon_range[2],
+                              "Manhattan",
+                              ifelse(airbnb_data$Latitude >= brooklyn_lat_range[1] & airbnb_data$Latitude <= brooklyn_lat_range[2] &
+                                       airbnb_data$Longitude >= brooklyn_lon_range[1] & airbnb_data$Longitude <= brooklyn_lon_range[2],
+                                     "Brooklyn",
+                                     ifelse(airbnb_data$Latitude >= queens_lat_range[1] & airbnb_data$Latitude <= queens_lat_range[2] &
+                                              airbnb_data$Longitude >= queens_lon_range[1] & airbnb_data$Longitude <= queens_lon_range[2],
+                                            "Queens",
+                                            ifelse(airbnb_data$Latitude >= bronx_lat_range[1] & airbnb_data$Latitude <= bronx_lat_range[2] &
+                                                     airbnb_data$Longitude >= bronx_lon_range[1] & airbnb_data$Longitude <= bronx_lon_range[2],
+                                                   "Bronx",
+                                                   ifelse(airbnb_data$Latitude >= staten_island_lat_range[1] & airbnb_data$Latitude <= staten_island_lat_range[2] &
+                                                            airbnb_data$Longitude >= staten_island_lon_range[1] & airbnb_data$Longitude <= staten_island_lon_range[2],
+                                                      "Staten Island", "No Borough"))))))
+
+
+rats <- read_csv("Rat_Sightings_20240507.csv")|>
+  filter(Latitude!="NA",
+         Longitude!="NA")
+
+parks <- read_csv("Parks_Properties_20240507.csv")
+parks_sf <- st_as_sf(parks, wkt = "multipolygon")
+
+
+url<- "https://data.cityofnewyork.us/resource/fi97-k4k6.json"
+
+farmers_markets <- fromJSON(url)|>
+  mutate(latitude=as.numeric(latitude),
+         longitude=as.numeric(longitude))
+
+rats_graph<-rats|>
+  sample_n(225)  |>
+  select(Latitude, Longitude) 
+
+
+airbnb_parsed <- airbnb_data |>
+  select(Name, Title, Id, `Listing URL`, Price, Beds, Baths, Bedrooms, `Average Rating`, `Number of Reviews`, `More Details`, `Listing Type`, `Room Type Category`) |>
+  mutate(price_parsed = parse_number(Price))
+
+airbnb_nona <- na.omit(airbnb_parsed)
+
+```
+
+```{r}
+selectInput("x", label = "x-axis variable:",
+  choices = c("# of Reviews" = "Number of Reviews",
+              "# of Beds" = "Beds",
+              "# of Baths" = "Baths",
+              "Price" = "price_parsed",
+              "⭐ Review" = "Average Rating"))
+              
+selectInput("y", label = "y-axis variable:",
+  choices = c("⭐ Review" = "Average Rating",
+              "Price" = "price_parsed",
+              "# of Baths" = "Baths",
+              "# of Beds" = "Beds",
+              "# of Reviews" = "Number of Reviews"))
+
+renderPlot({
+  
+  ggplot(airbnb_nona, aes(x = .data[[input$x]], y = .data[[input$y]])) +
+    geom_point(size = 2, alpha = 0.25, color = "hotpink") +
+    geom_smooth(se = FALSE) +
+    labs(x = input$x, y = input$y, title = paste(input$x, "vs", input$y))
+})
+
+```
+
