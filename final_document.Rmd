@@ -291,6 +291,7 @@ renderPlot({
 
 Two Variable Comparison
 ==========================
+
 ```{r, echo=FALSE}
 titlePanel("Two Variable Comparison")
 
