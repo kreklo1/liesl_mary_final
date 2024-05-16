@@ -293,18 +293,18 @@ Two Variable Comparison
 
 ```{r}
 selectInput("x", label = "x-axis variable:",
-  choices = c("Price per Night" = "price_parsed",
-              "⭐ Review" = "Average Rating",
-              "# of Reviews" = "Number of Reviews",
+  choices = c("# of Reviews" = "Number of Reviews",
               "# of Beds" = "Beds",
-              "# of Baths" = "Baths"))
-
+              "# of Baths" = "Baths",
+              "Price" = "price_parsed",
+              "⭐ Review" = "Average Rating"))
+              
 selectInput("y", label = "y-axis variable:",
-  choices = c("Price per Night" = "price_parsed",
-              "⭐ Review" = "Average Rating",
-              "# of Reviews" = "Number of Reviews",
+  choices = c("⭐ Review" = "Average Rating",
+              "Price" = "price_parsed",
+              "# of Baths" = "Baths",
               "# of Beds" = "Beds",
-              "# of Baths" = "Baths"))
+              "# of Reviews" = "Number of Reviews"))
 
 renderPlot({
   
