@@ -325,7 +325,8 @@ Column {.col-md-4}
 
 **Mary's Favorite**
 
-I chose a condo in Manhattan with the Name "Cozy & Chic, Chelsea High Line Studio" as my favorite AirBnb in New York City. As you can see from the table below, this AirBnb is a Guest Favorite, and is very highly rated.
+I chose a condo in Manhattan with the Name "Cozy & Chic, Chelsea High Line Studio" as my favorite AirBnb in New York City. As you can see from the table below, this AirBnb is a Guest Favorite, and is very highly rated. Check out [this link](https://www.airbnb.com/rooms/808386228706904148?source_impression_id=p3_1715360488_%2FcmH40MOuzoem%2Bl9) to learn more about it!
+
 
 ```{r, echo=FALSE}
 mary_airbnb<-airbnb_with_boroughs|>
@@ -336,7 +337,6 @@ kable(mary_airbnb, format = "html")|>
   kable_styling()
 ```
 
-Below you can see where this airbnb is in relation to others. As you can see, it is the perfect location so you are not directly in the middle of everything, but you still are super close and conveniently located! The views are also great from the condo. Check out [this link](https://www.airbnb.com/rooms/808386228706904148?source_impression_id=p3_1715360488_%2FcmH40MOuzoem%2Bl9) to learn more about it!
 
 ```{r, echo=FALSE}
 rat_icon <- makeIcon(
