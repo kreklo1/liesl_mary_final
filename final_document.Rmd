@@ -274,18 +274,16 @@ inputPanel(
     choices = c("Price" = "Price",
                 "⭐ Review" = "Average Rating",
                 "# of Reviews" = "Number of Reviews",
-                "# of Beds" = "Beds",
-                "# of Baths" = "Baths",
-                "Cleanliness Rating" = "Cleanliness"))
+                "# of Beds" = "Beds"))
 )
 
 renderPlot({
 
- ggplot(data = summary_stats_data)+
+  ggplot(data = summary_stats_data)+
   geom_boxplot(aes( x = .data[[input$x]], y = borough), 
                color="deeppink") +
-  labs(y = "Borough", x = "Price") 
-  #line of code that makes is so that the x lab changes with the different input
+  labs(y = "Borough", x = "Price")
+
 })
 ```
 
