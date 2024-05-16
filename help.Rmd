@@ -115,6 +115,9 @@ airbnb_nona <- na.omit(airbnb_parsed)
 
 ```
 
+
+PAGE 1
+=======
 ```{r}
 selectInput("x", label = "x-axis variable:",
   choices = c("# of Reviews" = "Number of Reviews",
@@ -140,3 +143,36 @@ renderPlot({
 
 ```
 
+
+PAGE 2 
+===============================
+
+```{r}
+bar_data <- airbnb_nona |>
+  group_by(`Room Type Category`)
+
+```
+
+
+
+
+```{r, echo=FALSE}
+titlePanel("Summary Statistics by Borough")
+
+inputPanel(
+  selectInput("x", label = "x-axis variable:",
+    choices = c("Price" = "Price",
+                "⭐ Review" = "Average Rating",
+                "# of Reviews" = "Number of Reviews",
+                "# of Beds" = "Beds"))
+)
+
+renderPlot({
+
+  ggplot(data = bar_data)+
+  geom_col(aes( x = .data[[input$x]], y = `Room Type Category`), 
+               color="deeppink") +
+  labs(y = "Borough")
+
+})
+```

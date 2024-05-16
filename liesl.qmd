@@ -128,6 +128,8 @@ renderPlot({
 ```
 
 ```{r}
+bar_data <- airbnb_nona |>
+  group_by(`Room Type Category`)
 
 ```
 
@@ -147,7 +149,7 @@ inputPanel(
 
 renderPlot({
 
-  ggplot(data = summary_stats_data)+
+  ggplot(data = bar_data)+
   geom_bar(aes( x = .data[[input$x]], y = ), 
                color="deeppink") +
   labs(y = "Borough", x = "Price")
