@@ -4,7 +4,9 @@ editor_options:
   chunk_output_type: console
 ---
 
+
 ## Libraries
+
 ```{r}
 library(tidyverse)
 library(ggplot2)
@@ -17,7 +19,9 @@ library(kableExtra)
 library(beepr)
 ```
 
+
 ## Data
+
 ```{r}
 parks <- read_csv("datasets/Parks_Properties_20240507.csv")
 airbnb_data <- read_csv("datasets/airbnb_data.csv")
@@ -25,7 +29,9 @@ rats <- read_csv("datasets/Rat_Sightings_20240507.csv")
 ```
 
 
+
 ## Interactive Leaflet map
+
 ```{r}
 leaflet() |>
     addTiles() |>
@@ -41,8 +47,10 @@ leaflet() |>
         fillColor = "pink")
 ```
 
+
   
 ##Two variable comparisons
+
 ```{r}
 airbnb_parsed <- airbnb_data |>
   select(Name, Title, Id, `Listing URL`, Price, Beds, Baths, Bedrooms, `Average Rating`, `Number of Reviews`, `More Details`, `Listing Type`, `Room Type Category`) |>
@@ -50,27 +58,30 @@ airbnb_parsed <- airbnb_data |>
 airbnb_nona <- na.omit(airbnb_parsed)
 ```
 
-
 ```{r}
 airbnb_parsed |>
   ggplot(aes(y = price_parsed, x = `Average Rating`)) +
   geom_point() 
 ```
+
 ```{r}
 airbnb_parsed |>
   ggplot(aes(y = `Number of Reviews`, x = `Average Rating`)) +
   geom_point() 
 ```
+
 ```{r}
 airbnb_parsed |>
   ggplot(aes(y = `Number of Reviews`, x = price_parsed)) +
   geom_point() 
 ```
+
 ```{r}
 airbnb_parsed |>
   ggplot(aes(y = `More Details`)) +
   geom_bar() 
 ```
+
 
 Interchangeable variables to implement with the shiny app
   - Price
@@ -81,6 +92,7 @@ Interchangeable variables to implement with the shiny app
   - Tags (e.g. guest favorite) (not a scatter plot variable)
   
 ## Word Cloud
+
 ```{r}
 word <- airbnb_data |>
   select(Name) |>
@@ -92,9 +104,11 @@ word <- airbnb_data |>
   count(word)
 
 ```
+
 concerns: bdrm, bed room, bedroom BR are all meaning bedroom but they don't all say it the same way  
 ,
          words = str_remove_all(words, "")
+
 ```{r}
 trytrytry <- str_split(airbnb_data$Name, "\\s+")[[1]]
 trytrytry
@@ -131,9 +145,6 @@ renderPlot({
 
 ```
 
-
-
-
 ```{r, echo=FALSE}
 titlePanel("Summary Statistics by Borough")
 
@@ -155,8 +166,6 @@ renderPlot({
 })
 ```
 
-
-
 ```{r}
 library(beepr)
 summary_stats_data <- airbnb_with_boroughs|>
@@ -173,7 +182,9 @@ summary_stats_data |>
 beep(sound = 11)
 ```
 
+
 My favorite Airbnb in New York city is [this one](https://www.airbnb.com/rooms/41178612?source_impression_id=p3_1715728914_jTNcY96IHSz6LdHw). It has a nice location in SoHo with a terrace, lots of natural lighting, and fun furniture. In the table below you can see the important information for this stay!
+
 
 ```{r, echo = FALSE}
 liesls_fav <- airbnb_with_boroughs |>
@@ -222,3 +233,4 @@ leaflet(width = "100%", height = 600) |>
 })
 beep(sound = 11)
 ```
+
