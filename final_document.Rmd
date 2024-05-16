@@ -114,7 +114,8 @@ airbnb_parsed <- airbnb_data |>
   select(Name, Title, Id, `Listing URL`, Price, Beds, Baths, Bedrooms, `Average Rating`, `Number of Reviews`, `More Details`, `Listing Type`, `Room Type Category`) |>
   mutate(price_parsed = parse_number(Price))
 
-airbnb_nona <- na.omit(airbnb_parsed)
+airbnb_nona <- na.omit(airbnb_parsed)|>
+  select(!Price)
 
 ```
 
@@ -290,30 +291,29 @@ renderPlot({
 Two Variable Comparison
 ==========================
 
-```{r, echo=FALSE}
-titlePanel("Two Variable Comparison")
+```{r}
+selectInput("x", label = "x-axis variable:",
+  choices = c("Price per Night" = "price_parsed",
+              "⭐ Review" = "Average Rating",
+              "# of Reviews" = "Number of Reviews",
+              "# of Beds" = "Beds",
+              "# of Baths" = "Baths"))
 
-inputPanel(
-  selectInput("x", label = "x-axis variable:",
-    choices = c("Price" = "price_parsed",
-                "⭐ Review" = "Average Rating",
-                "# of Reviews" = "Number of Reviews",
-                "# of Beds" = "Number of Beds",
-                "# of Baths" = "Number of Baths")),
-    selectInput("y", label = "y-axis variable:",
-    choices = c("Price" = "price_parsed",
-                "⭐ Review" = "Average Rating",
-                "Number of Reviews" = "Number of Reviews",
-                "# of Beds" = "Number of Beds",
-                "# of Baths" = "Number of Baths"))
-)
+selectInput("y", label = "y-axis variable:",
+  choices = c("Price per Night" = "price_parsed",
+              "⭐ Review" = "Average Rating",
+              "# of Reviews" = "Number of Reviews",
+              "# of Beds" = "Beds",
+              "# of Baths" = "Baths"))
 
 renderPlot({
-
-        ggplot(airbnb_nona, aes(x = .data[[input$x]], y =  .data[[input$y]])) +
-          geom_jitter(size = 2, alpha = 0.25, color = "hotpink") +
-          geom_smooth(se = FALSE)
+  
+  ggplot(airbnb_nona, aes(x = .data[[input$x]], y = .data[[input$y]])) +
+    geom_point(size = 2, alpha = 0.25, color = "hotpink") +
+    geom_smooth(se = FALSE) +
+    labs(x = input$x, y = input$y, title = paste(input$x, "vs", input$y))
 })
+
 ```
 
 Our Favorites
