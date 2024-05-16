@@ -283,7 +283,7 @@ renderPlot({
   ggplot(data = summary_stats_data)+
   geom_boxplot(aes( x = .data[[input$x]], y = borough), 
                color="deeppink") +
-  labs(y = "Borough", x = "Price")
+  labs(y = "Borough")
 
 })
 ```
