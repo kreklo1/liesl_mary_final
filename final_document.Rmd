@@ -113,6 +113,9 @@ rats_graph<-rats|>
 airbnb_parsed <- airbnb_data |>
   select(Name, Title, Id, `Listing URL`, Price, Beds, Baths, Bedrooms, `Average Rating`, `Number of Reviews`, `More Details`, `Listing Type`, `Room Type Category`) |>
   mutate(price_parsed = parse_number(Price))
+
+airbnb_nona <- na.omit(airbnb_parsed)
+
 ```
 
 About
@@ -270,8 +273,10 @@ inputPanel(
   selectInput("x", label = "x-axis variable:",
     choices = c("Price" = "Price",
                 "⭐ Review" = "Average Rating",
-                "Number of Reviews" = "Number of Reviews"
-                ))
+                "# of Reviews" = "Number of Reviews",
+                "# of Beds" = "Beds",
+                "# of Baths" = "Baths",
+                "Cleanliness Rating" = "Cleanliness"))
 )
 
 renderPlot({
@@ -280,7 +285,7 @@ renderPlot({
   geom_boxplot(aes( x = .data[[input$x]], y = borough), 
                color="deeppink") +
   labs(y = "Borough", x = "Price") 
-  
+  #line of code that makes is so that the x lab changes with the different input
 })
 ```
 
@@ -293,16 +298,20 @@ inputPanel(
   selectInput("x", label = "x-axis variable:",
     choices = c("Price" = "price_parsed",
                 "⭐ Review" = "Average Rating",
-                "Number of Reviews" = "Number of Reviews")),
+                "# of Reviews" = "Number of Reviews",
+                "# of Beds" = "Number of Beds",
+                "# of Baths" = "Number of Baths")),
     selectInput("y", label = "y-axis variable:",
     choices = c("Price" = "price_parsed",
                 "⭐ Review" = "Average Rating",
-                "Number of Reviews" = "Number of Reviews"))
+                "Number of Reviews" = "Number of Reviews",
+                "# of Beds" = "Number of Beds",
+                "# of Baths" = "Number of Baths"))
 )
 
 renderPlot({
 
-        ggplot(airbnb_parsed, aes(x = .data[[input$x]], y =  .data[[input$y]])) +
+        ggplot(airbnb_nona, aes(x = .data[[input$x]], y =  .data[[input$y]])) +
           geom_jitter(size = 2, alpha = 0.25, color = "hotpink") +
           geom_smooth(se = FALSE)
 })
@@ -387,7 +396,7 @@ kable(liesls_fav, format = "html")|>
   kable_styling()
 ```
 
-Used Mary's map code and changed thigs to show my airbnb but it isn't working. **make sure to look at this**
+
 
 ```{r, echo=FALSE}
 rat_icon <- makeIcon(
@@ -423,4 +432,17 @@ beep(sound = 11)
 Conclusion
 ==========================
 
+**Conclusion**
+
+Through this project we investigated multiple different variables that exist for Airbnbs in New York City and we chose different ways to display their importance. The first variable that we looked at was location. Beyond just plotting where the Airbnbs in NYC are, we also wanted to compare their location to local amenities that are of interest to us. We used three additional data sets to show three different relationships, nearness to Rat sightings, Parks, and Farmer's Markets. We also show frequency of use and common word themes throughout titles and names with a word cloud. This can tell us about the way that people market their rentals. We have two interactive graphs, one is a box plot and one is a scatter plot. The box plot separates tells us the spread of different variables by borough. This can help Airbnb searchers decide which borough they might want to look into depending on its relationship with the variable they are interested in. The scatter plot can show the relationship between different variables that you select. Lastly we shared our favorite Airbnbs to inspire people to dig further into the data and find the Airbnbs that they like best!
+
+**Data From**
+
+[Airbnb Data](https://www.airbnb.com/?c=.pi0.pk36239956_25650614176&c=.pi0.pk36239956_25650614176&ghost=true&gad_source=1&gclid=Cj0KCQjw3ZayBhDRARIsAPWzx8qFmPd_vIsQfrnhWIqQ4CoSlwY43OrhhkfOG6jMlIpvTxczz92mB-EaAqlxEALw_wcB)
+
+[Rat Data]()
+
+[Park Data]()
+
+[Farmer's Market Data]()
 

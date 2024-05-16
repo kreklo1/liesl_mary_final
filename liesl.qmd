@@ -48,6 +48,7 @@ Concerns about this.
 airbnb_parsed <- airbnb_data |>
   select(Name, Title, Id, `Listing URL`, Price, Beds, Baths, Bedrooms, `Average Rating`, `Number of Reviews`, `More Details`, `Listing Type`, `Room Type Category`) |>
   mutate(price_parsed = parse_number(Price))
+airbnb_nona <- na.omit(airbnb_parsed)
 ```
 
 
