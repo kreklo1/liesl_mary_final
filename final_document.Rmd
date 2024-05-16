@@ -31,8 +31,6 @@ library(AER)
 library(kableExtra)
 library(beepr)
 library(shinyWidgets)
-
-
 ```
 
 
@@ -214,6 +212,7 @@ shinyApp(ui, server)
 ```
 
 
+
 Description Word Analysis
 ==========================
 ```{r}
@@ -249,6 +248,35 @@ renderWordcloud2({
 })
 
 ```
+
+
+Two Variable Analysis
+============================
+```{r}
+selectInput("x", label = "x-axis variable:",
+  choices = c("# of Reviews" = "Number of Reviews",
+              "# of Beds" = "Beds",
+              "# of Baths" = "Baths",
+              "Price" = "price_parsed",
+              "⭐ Review" = "Average Rating"))
+              
+selectInput("y", label = "y-axis variable:",
+  choices = c("⭐ Review" = "Average Rating",
+              "Price" = "price_parsed",
+              "# of Baths" = "Baths",
+              "# of Beds" = "Beds",
+              "# of Reviews" = "Number of Reviews"))
+
+renderPlot({
+  
+  ggplot(airbnb_nona, aes(x = .data[[input$x]], y = .data[[input$y]])) +
+    geom_point(size = 2, alpha = 0.25, color = "hotpink") +
+    geom_smooth(se = FALSE) +
+    labs(x = input$x, y = input$y, title = paste(input$x, "vs", input$y))
+})
+
+```
+
 
 
 Summary Statistics By Borough
@@ -288,33 +316,6 @@ renderPlot({
 })
 ```
 
-Two Variable Comparison
-==========================
-
-```{r}
-selectInput("x", label = "x-axis variable:",
-  choices = c("# of Reviews" = "Number of Reviews",
-              "# of Beds" = "Beds",
-              "# of Baths" = "Baths",
-              "Price" = "price_parsed",
-              "⭐ Review" = "Average Rating"))
-              
-selectInput("y", label = "y-axis variable:",
-  choices = c("⭐ Review" = "Average Rating",
-              "Price" = "price_parsed",
-              "# of Baths" = "Baths",
-              "# of Beds" = "Beds",
-              "# of Reviews" = "Number of Reviews"))
-
-renderPlot({
-  
-  ggplot(airbnb_nona, aes(x = .data[[input$x]], y = .data[[input$y]])) +
-    geom_point(size = 2, alpha = 0.25, color = "hotpink") +
-    geom_smooth(se = FALSE) +
-    labs(x = input$x, y = input$y, title = paste(input$x, "vs", input$y))
-})
-
-```
 
 Our Favorites
 ==========================
