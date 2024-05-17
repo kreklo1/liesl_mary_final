@@ -295,24 +295,28 @@ summary_stats_data |>
 #Note that Staten Island only has one listing
 ```
 
+
 ```{r, echo=FALSE}
-titlePanel("Summary Statistics by Borough")
+summary_stats_data <- airbnb_with_boroughs |>
+    mutate(Price = parse_number(Price),
+           Borough = borough)
 
-inputPanel(
-  selectInput("x", label = "x-axis variable:",
-    choices = c("Price" = "Price",
-                "⭐ Review" = "Average Rating",
-                "# of Reviews" = "Number of Reviews",
-                "# of Beds" = "Beds"))
-)
+selectInput("x_var", "Select X-axis Variable:",
+            choices = c("Price" = "Price",
+                        "⭐ Review" = "Average Rating",
+                        "# of Reviews" = "Number of Reviews",
+                        "# of Beds" = "Beds"),
+            selected = "Price")
 
-renderPlot({
+plotOutput("boxplot")
 
-  ggplot(data = summary_stats_data)+
-  geom_boxplot(aes( x = .data[[input$x]], y = borough), 
-               color="deeppink") +
-  labs(y = "Borough")
-
+output$boxplot <- renderPlot({
+  req(input$x_var)
+  
+  ggplot(summary_stats_data) +
+    geom_boxplot(aes(y = Borough, x = .data[[input$x_var]]), color = "deeppink") +
+    theme_minimal() +
+    labs(y = "Borough", x = input$x_var)
 })
 ```
 
