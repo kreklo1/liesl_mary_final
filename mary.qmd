@@ -263,3 +263,29 @@ renderPlot({
 })
 
 ```
+
+
+```{r}
+selectInput("x", label = "x-axis variable:",
+  choices = c("Price" = "price_parsed",
+              "⭐ Review" = "Average Rating",
+              "# of Reviews" = "Number of Reviews",
+              "# of Beds" = "Number of Beds",
+              "# of Baths" = "Number of Baths"))
+
+selectInput("y", label = "y-axis variable:",
+  choices = c("Price" = "price_parsed",
+              "⭐ Review" = "Average Rating",
+              "# of Reviews" = "Number of Reviews",
+              "# of Beds" = "Number of Beds",
+              "# of Baths" = "Number of Baths"))
+
+renderPlot({
+  
+  ggplot(airbnb_parsed, aes(x = .data[[input$x]], y = .data[[input$y]])) +
+    geom_point(size = 2, alpha = 0.25, color = "hotpink") +
+    geom_smooth(se = FALSE) +
+    labs(x = input$x, y = input$y, title = paste(input$x, "vs", input$y))
+})
+
+```

@@ -148,6 +148,10 @@ leaflet() |>
 
 Airbnb with Other Variable
 ==========================
+
+Column 
+-------------------------
+
 ```{r interactive map, echo = FALSE}
 rat_icon <- makeIcon(
   iconUrl = "https://icons.iconarchive.com/icons/google/noto-emoji-animals-nature/256/22251-rat-icon.png",
@@ -212,10 +216,29 @@ shinyApp(ui, server)
 
 ```
 
+Column  {data-width = 150}
+-------------------------
+
+**What else is in NYC?**
+
+We got inspiration to use New York City as our focus location from our data science one project (called Hide & Squeak – pretty awesome, we know), and wanted to be able to tie in some of our data from there. We chose our dataset with rat sightings from DS1, a dataset of parks, and one with farmer’s market locations. We thought it would be interesting to consider the location of nearby attractions when choosing an Airbnb. One note is that due to the size of the rat sightings dataset, we chose to take a random sample of about 250 rats as to not overwhelm the map. Feel free to check the boxes and overlay these variables onto the map!
 
 
 Description Word Analysis
 ==========================
+
+Column
+-------------------
+
+**How do people market their Airbnbs?**
+
+
+We were very interested in seeing if there were specific words that were used more than others in the listings of Airbnbs, so we counted the amount each word was used and decided to make a wordcloud. You can select whether you want to see the words from the “Name” or the “Title” category of the listing. When you hover over a word, it will tell you how many times that word appeared in our scraped Airbnb listings.
+
+
+Column
+--------------------
+
 ```{r}
 selectInput("choice", "Select an option:",
             choices = c("Name", "Title"))
@@ -253,6 +276,11 @@ renderWordcloud2({
 
 Two Variable Analysis
 ============================
+
+**How do variables relate to each other?**
+
+Here, we wanted to know if there were any correlations between things like price, number of beds, number of baths, reviews, etc. We decided to make a scatter plot and added a smoother to show the relationships. You can choose which variable you want on each axis to find out if the two are correlated.
+
 ```{r}
 selectInput("x", label = "x-axis variable:",
   choices = c("# of Reviews" = "Number of Reviews",
@@ -282,6 +310,10 @@ renderPlot({
 
 Summary Statistics By Borough
 ==========================
+
+Column 
+-------------------------
+
 ```{r, include = FALSE}
 summary_stats_data <- airbnb_with_boroughs|>
   mutate(Price=parse_number(Price),
@@ -325,6 +357,12 @@ output$boxplot <- renderPlot({
 })
 ```
 
+Column 
+-------------------------
+
+**Which borough might have the best Airbnb for me?**
+
+One of our other questions was how the location affected some of the variables. To look into that, we sorted the Airbnbs into their respective boroughs (the no borough category represents the Airbnbs that are just outside of NYC) and made boxplots. By doing this, you are able to see which borough has the most/least expensive places, places with the most/least beds, and much more! One important note is that our scraping of the Airbnb website only obtained one from Staten Island, so Staten Island only has one data point for each category.
 
 Our Favorites
 ==========================

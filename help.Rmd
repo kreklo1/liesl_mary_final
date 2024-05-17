@@ -158,11 +158,10 @@ PAGE 3
 ===============================
 
 ```{r, echo=FALSE}
-summary_stats_data <- airbnb_with_boroughs %>%
+summary_stats_data <- airbnb_with_boroughs |>
     mutate(Price = parse_number(Price),
            Borough = borough)
 
-# Input control for selecting the x-axis variable
 selectInput("x_var", "Select X-axis Variable:",
             choices = c("Price" = "Price",
                         "⭐ Review" = "Average Rating",
@@ -170,10 +169,8 @@ selectInput("x_var", "Select X-axis Variable:",
                         "# of Beds" = "Beds"),
             selected = "Price")
 
-# Placeholder for the plot
 plotOutput("boxplot")
 
-# Reactive plot based on the selected x-axis variable
 output$boxplot <- renderPlot({
   req(input$x_var)
   
@@ -182,7 +179,5 @@ output$boxplot <- renderPlot({
     theme_minimal() +
     labs(y = "Borough", x = input$x_var)
 })
-
-
 ```
 
