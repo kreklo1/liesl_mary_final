@@ -13,6 +13,7 @@ runtime: shiny
 ```{r libraries and data, include = FALSE}
 library(ggplot2)
 library(dplyr)
+library(forcats)
 library(tidyr)
 library(lubridate)
 library(stringr)
@@ -284,7 +285,9 @@ Summary Statistics By Borough
 ```{r, include = FALSE}
 summary_stats_data <- airbnb_with_boroughs|>
   mutate(Price=parse_number(Price),
-         Borough=borough)
+         Borough=borough)|>
+  mutate(Borough = fct_relevel(Borough, "No Borough", after = 0))
+
 
 summary_stats_data |> 
  ggplot()+
@@ -299,7 +302,9 @@ summary_stats_data |>
 ```{r, echo=FALSE}
 summary_stats_data <- airbnb_with_boroughs |>
     mutate(Price = parse_number(Price),
-           Borough = borough)
+           Borough = borough)|>
+    mutate(Borough = fct_relevel(Borough, "No Borough", after = 0))
+
 
 selectInput("x_var", "Select X-axis Variable:",
             choices = c("Price" = "Price",
