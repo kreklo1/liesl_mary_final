@@ -228,11 +228,8 @@ We got inspiration to use New York City as our focus location from our data scie
 Description Word Analysis
 ==========================
 
-**How do people market their Airbnbs?**
-
-
-We were very interested in seeing if there were specific words that were used more than others in the listings of Airbnbs, so we counted the amount each word was used and decided to make a wordcloud. You can select whether you want to see the words from the “Name” or the “Title” category of the listing. When you hover over a word, it will tell you how many times that word appeared in our scraped Airbnb listings.
-
+Column
+--------------------
 
 ```{r}
 selectInput("choice", "Select an option:",
@@ -267,6 +264,15 @@ renderWordcloud2({
 })
 
 ```
+
+Column
+--------------------
+
+**How do people market their Airbnbs?**
+
+
+We were very interested in seeing if there were specific words that were used more than others in the listings of Airbnbs, so we counted the amount each word was used and decided to make a wordcloud. You can select whether you want to see the words from the “Name” or the “Title” category of the listing. When you hover over a word, it will tell you how many times that word appeared in our scraped Airbnb listings.
+
 
 
 Two Variable Analysis
