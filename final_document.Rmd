@@ -6,6 +6,7 @@ output:
       bg: "#fcf7e9"
       fg: "#d41495" 
       primary: "#d41495"
+    vertical_layout: scroll
 runtime: shiny
 ---
 
@@ -227,17 +228,11 @@ We got inspiration to use New York City as our focus location from our data scie
 Description Word Analysis
 ==========================
 
-Column
--------------------
-
 **How do people market their Airbnbs?**
 
 
 We were very interested in seeing if there were specific words that were used more than others in the listings of Airbnbs, so we counted the amount each word was used and decided to make a wordcloud. You can select whether you want to see the words from the “Name” or the “Title” category of the listing. When you hover over a word, it will tell you how many times that word appeared in our scraped Airbnb listings.
 
-
-Column
---------------------
 
 ```{r}
 selectInput("choice", "Select an option:",
@@ -277,6 +272,9 @@ renderWordcloud2({
 Two Variable Analysis
 ============================
 
+Column
+--------------------
+
 **How do variables relate to each other?**
 
 Here, we wanted to know if there were any correlations between things like price, number of beds, number of baths, reviews, etc. We decided to make a scatter plot and added a smoother to show the relationships. You can choose which variable you want on each axis to find out if the two are correlated.
@@ -295,6 +293,13 @@ selectInput("y", label = "y-axis variable:",
               "# of Baths" = "Baths",
               "# of Beds" = "Beds",
               "# of Reviews" = "Number of Reviews"))
+```
+
+
+Column
+--------------------
+
+```{r}
 
 renderPlot({
   
@@ -367,7 +372,7 @@ One of our other questions was how the location affected some of the variables. 
 Our Favorites
 ==========================
 
-Column {.col-md-4}
+Column {.col-md-5}
 -------------------------
 
 **Mary's Favorite**
@@ -378,9 +383,9 @@ I chose a condo in Manhattan with the Name "Cozy & Chic, Chelsea High Line Studi
 ```{r, echo=FALSE}
 mary_airbnb<-airbnb_with_boroughs|>
   filter(Name=="New! Cozy & Chic, Chelsea High Line Studio")|>
-  select("Name", "Title", "Price", "Baths", "Bedrooms", "Average Rating", "Number of Reviews", "Room Type Category", "More Details", "borough")
+  select("Name", "Title", "Price", "Baths", "Bedrooms", "Average Rating", "Number of Reviews", "Room Type Category", "More Details")
 
-kable(mary_airbnb, format = "html")|>
+kable(mary_airbnb, format = "html") |>
   kable_styling()
 ```
 
@@ -401,9 +406,9 @@ carrot_icon <- makeIcon(
 star_icon<-makeIcon(iconUrl="https://www.clipartmax.com/png/full/85-851033_filesolid-bright-green-star-1-green-star-no-background.png", iconWidth=48, iconHeight=48)
 
 renderLeaflet({
-leaflet(width = "100%", height = 600) |>
+leaflet() |>
   addTiles() |>
-  setView(lng = -74.00, lat = 40.74, zoom = 12)|>
+  setView(lng = -74.00, lat = 40.745, zoom = 13)|>
   addMarkers(data=farmers_markets, lng=~longitude, lat=~latitude, icon = carrot_icon, popup = ~paste(marketname, "</br>", daysoperation, hoursoperations))|>
   addMarkers(data=rats_graph, lng=~Longitude, lat=~Latitude, icon = rat_icon, popup = ~paste("squeak squeak:)"))|>
   addPolygons(data=parks_sf, color="deeppink", popup = ~paste(SIGNNAME))|>
@@ -413,12 +418,12 @@ leaflet(width = "100%", height = 600) |>
 beep(sound = 11)
 ```
 
-Next time you are looking for a place to stay in New York City, consider splurging a bit on this beautiful AirBnb! Sadly, none of the rats in our sampling of rat sightings were spotted around here, so no bro-dents, however, there are 3 farmer's markets and several parks nearby so lots to do and explore!
+Next time you are looking for a place to stay in New York City, consider splurging a bit on this beautiful AirBnb! There were a few rat sightings near here, so you could make some bro-dents, and furthermore there are 3 farmer's markets and several parks nearby. No matter your passion, whether it's parks, markets, or rats, there's something for you near this Airbnb!
 
 Column {.col-md-1}
 -------------------------
 
-Column {.col-md-4}
+Column {.col-md-5}
 -------------------------
 
 **Liesl's Favorite**
@@ -437,8 +442,7 @@ liesls_fav <- airbnb_with_boroughs |>
          "Average Rating", 
          "Number of Reviews", 
          "Room Type Category", 
-         "More Details", 
-         "borough")
+         "More Details")
 kable(liesls_fav, format = "html")|>
   kable_styling()
 ```
@@ -461,9 +465,9 @@ carrot_icon <- makeIcon(
 star_icon<-makeIcon(iconUrl="https://www.clipartmax.com/png/full/85-851033_filesolid-bright-green-star-1-green-star-no-background.png", iconWidth=48, iconHeight=48)
 
 renderLeaflet({
-leaflet(width = "100%", height = 600) |>
+leaflet() |>
   addTiles() |>
-  setView(lng = -74.00, lat = 40.74, zoom = 12)|>
+  setView(lng = -74.00, lat = 40.72, zoom = 13)|>
   addMarkers(data=farmers_markets, lng=~longitude, lat=~latitude, icon = carrot_icon, popup = ~paste(marketname, "</br>", daysoperation, hoursoperations))|>
   addMarkers(data=rats_graph, lng=~Longitude, lat=~Latitude, icon = rat_icon, popup = ~paste("squeak squeak:)"))|>
   addPolygons(data=parks_sf, color="deeppink", popup = ~paste(SIGNNAME))|>

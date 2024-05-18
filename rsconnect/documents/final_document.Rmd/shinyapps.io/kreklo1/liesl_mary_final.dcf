@@ -1,11 +1,11 @@
 name: liesl_mary_final
-title: liesl_mary_final
+title: Liesl_Mary_Final
 username: kreklo1
 account: kreklo1
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 12022339
-bundleId: 8628580
+bundleId: 8630769
 url: https://kreklo1.shinyapps.io/liesl_mary_final/
 version: 1
 asMultiple: FALSE
