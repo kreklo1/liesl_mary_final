@@ -5,7 +5,7 @@ account: kreklo1
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 12022339
-bundleId:
+bundleId: 8631999
 url: https://kreklo1.shinyapps.io/liesl_mary_final/
 version: 1
 asMultiple: FALSE
