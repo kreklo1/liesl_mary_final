@@ -1,5 +1,5 @@
 ---
-title: "Liesl Mary Final"
+title: "New York City Airbnbs"
 output:
   flexdashboard::flex_dashboard:
     theme:
